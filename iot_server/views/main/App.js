@@ -6,7 +6,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      temp: 0,
+      btn1: 0,
+      btn2: 0,
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateTemp = this.updateTemp.bind(this);
@@ -19,16 +20,26 @@ class App extends Component {
     socket.on('temperature', (temperature) => {
       console.log('message from socket io', temperature.value);
       this.updateTemp(temperature.value);
+      document.getElementById('div1').style.background='red';
+      setTimeout(
+        () => {
+          document.getElementById('div1').style.background='none';
+      }, 300);
     });
     socket.on('humidity', (humidity) => {
       console.log('message from socket io', humidity.value);
       this.updateTemp(humidity.value);
+      document.getElementById('div2').style.background='red';
+      setTimeout(
+        () => {
+          document.getElementById('div2').style.background='none';
+      }, 300);
     });
   }
 
   updateTemp(temp) {
     this.setState({
-      temp: temp
+      bt1: 1
     });
   }
 
@@ -39,9 +50,11 @@ class App extends Component {
   render() {
     return (
       <div>
-      <button onClick={this.handleClick}>hellow world</button>
-      <h1>Counter </h1>
+      {/*
       <span>{this.state.temp}</span>
+      */}
+      <span id="div1" style={{margin: '40px'}}>btn1</span>
+      <span id="div2" style={{margin: '40px'}}>btn2</span>
       </div>
     );
   }
