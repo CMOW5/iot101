@@ -5,17 +5,27 @@
 // #include "system_interrupt.h"
 #include <Arduino.h>
 #include "../../System/src/system_config.h"
-#include "../../WifiHandler/src/Wifi_Handler.h"
+#include "Wifi_Handler.h"
+#include "MQTT_Handler.h"
+#include "Events.h"
+#include "Pins.h"
 
 class App
 {
-  int attr1;
-  int attr2;
-  WifiHandler wifiHandler;
+  private:
+    int appState;
+    Pins pins;
+    WifiHandler wifiHandler;
+    MQTTHandler mqttHandler;
+    Events events;
+
+    void processEvents(void);
 
   public:
+    App();
     void initialize(void);
     void tasks(void);
+
 };
 
 #endif
