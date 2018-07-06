@@ -1,8 +1,10 @@
 #include "system_config.h"
 
-/*
-void  SYS_Initialize(void)
-{
-  // initialize system
+SystemConfig* SystemConfig::pInstance = 0;
+
+SystemConfig* SystemConfig::instance() {
+  if (pInstance == 0) {
+    pInstance = new SystemConfig;
+  }
+  return pInstance;
 }
-*/
