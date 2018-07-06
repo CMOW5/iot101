@@ -3,6 +3,8 @@
 
 // #include "system_definitions.h"
 // #include "system_interrupt.h"
+#include <Ticker.h>
+#include <Arduino.h>
 
 class Events
 {
@@ -16,9 +18,10 @@ class Events
     static bool event_btn2;
 
     // methods
-    Events();
     static void event1(void);
     static void event2(void);
+    static void eventButton1(void);
+    static void eventButton2(void);
 };
 
 #endif
