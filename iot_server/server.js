@@ -44,7 +44,7 @@ mqttClient.on('message', function (topic, message) {
   }
 
   if (topic === mqttApi.MQTT_TOPIC_HUMIDITY) {
-    // io.sockets.emit('humidity', { raw: message.toString() });
+    io.sockets.emit('humidity', { value: message.toString() });
   }
   // console.log('send temp', message.toString());
 });

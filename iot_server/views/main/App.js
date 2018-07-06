@@ -20,6 +20,10 @@ class App extends Component {
       console.log('message from socket io', temperature.value);
       this.updateTemp(temperature.value);
     });
+    socket.on('humidity', (humidity) => {
+      console.log('message from socket io', humidity.value);
+      this.updateTemp(humidity.value);
+    });
   }
 
   updateTemp(temp) {
