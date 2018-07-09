@@ -25,4 +25,11 @@ void MQTTHandler::connectMQTT()
 	  delay(5000);
 	 }
 	 Serial.print("MQTT connected ");
+
+   // ping the server to keep the mqtt connection alive
+   // NOT required if you are publishing once every KEEPALIVE seconds
+   if(!mqtt->ping()) {
+     mqtt->disconnect();
+     Serial.print("MQTT disconnected ");
+   }
 }
