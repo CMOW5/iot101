@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node ./build/server-bundle.js",
     "build": "webpack --mode production",
-    "dev": "webpack --mode development --watch  & npm run start",
+    "dev": "webpack --mode development && npm start",
     "dev-test": "webpack-dev-server --mode development --open --hot",
     "dev-no-server": "webpack --mode development --watch"
   },
