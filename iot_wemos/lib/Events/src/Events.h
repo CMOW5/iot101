@@ -14,7 +14,7 @@ class Events
   public:
     //attributes
     int attr1 = 1;
-    static bool event_btn1;
+    static bool solicitarServicio;
     static bool event_btn2;
 
     // methods

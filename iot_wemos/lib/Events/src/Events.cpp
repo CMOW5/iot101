@@ -1,7 +1,7 @@
 #include "Events.h"
 
 /* attrib initialization */
-bool Events::event_btn1 = false;
+bool Events::solicitarServicio = false;
 bool Events::event_btn2 = false;
 
 bool isEventButton1Scheduled = false;
@@ -27,7 +27,7 @@ void button1EventScheduled() {
   isEventButton1Scheduled = false;
   int reading = digitalRead(14);
   if (reading == 0) { // the button is still pressed
-    Events::event_btn1 = true;
+    Events::solicitarServicio = true;
   }
 }
 
