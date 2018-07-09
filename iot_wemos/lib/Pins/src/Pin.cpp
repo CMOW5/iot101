@@ -11,7 +11,7 @@ void Pin::mode(uint8_t mode)
 }
 
 // Initialize the aplication modules
-byte Pin::getValue()
+byte Pin::value()
 {
   return pinVal;
 }
