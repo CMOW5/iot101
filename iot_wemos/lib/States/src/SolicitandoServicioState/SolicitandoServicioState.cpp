@@ -1,9 +1,11 @@
 #include "SolicitandoServicioState.h"
 
-SolicitandoServicioState::SolicitandoServicioState(AppStateMachine *appStateMachine) {
-    this->appStateMachine = appStateMachine;
+SolicitandoServicioState::SolicitandoServicioState(App *app) {
+    this->app = app;
 }
 
 void SolicitandoServicioState::solicitarServicio(void) {
-    // do something
+  Serial.println("solicitando servicio estando ya solicitando");
+  // app->mqttHandler.temperatureFeed->publish("temp");
+  // app->setState(app->getSolicitandoServicioState());
 }

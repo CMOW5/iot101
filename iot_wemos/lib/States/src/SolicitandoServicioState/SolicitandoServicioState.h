@@ -3,14 +3,19 @@
 
 #include "State.h"
 #include "AppStateMachine.h"
+#include "App.h"
 
 class AppStateMachine;
+class App;
+
 
 class SolicitandoServicioState: public State {
 private:
-  AppStateMachine *appStateMachine;
+  // AppStateMachine *appStateMachine;
+  App *app;
 public:
-  SolicitandoServicioState(AppStateMachine *appStateMachine);
+  // SolicitandoServicioState(AppStateMachine *appStateMachine);
+  SolicitandoServicioState(App *app);
   void solicitarServicio(void);
 };
 

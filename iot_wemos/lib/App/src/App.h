@@ -11,25 +11,42 @@
 #include "../../Pins/src/Pins.h"
 
 // states
-#include "../../States/src/AppStateMachine.h"
+// #include "../../States/src/AppStateMachine.h"
+#include "../../States/src/State.h"
+#include "../../States/src/SolicitandoServicioState/SolicitandoServicioState.h"
+#include "../../States/src/DisponibleState/DisponibleState.h"
+
+class AppStateMachine;
 
 class App
 {
   private:
     int appState;
     Pins pins;
-    WifiHandler wifiHandler;
-    MQTTHandler mqttHandler;
     Events events;
+    
     //states
-    AppStateMachine appStateMachine;
+    // AppStateMachine *appStateMachine;
+    State *disponibleState;
+    State *solicitandoServicioState;
+    State *state; // the current state
 
     void processEvents(void);
 
   public:
+    WifiHandler wifiHandler;
+    MQTTHandler mqttHandler;
     App();
     void initialize(void);
     void tasks(void);
+
+    //actions
+    void solicitarServicio(void);
+    // insertQuarter()
+    // ejectQuarter()
+    void setState(State *newState);
+    State* getDisponibleState(void);
+    State* getSolicitandoServicioState(void);
 
 };
 

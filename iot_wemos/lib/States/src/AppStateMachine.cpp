@@ -1,9 +1,9 @@
 #include "AppStateMachine.h"
 
 AppStateMachine::AppStateMachine() {
-    disponibleState = new DisponibleState(this);
-    solicitandoServicioState = new SolicitandoServicioState(this);
-    state = disponibleState;
+    // disponibleState = new DisponibleState(this);
+    // solicitandoServicioState = new SolicitandoServicioState(this);
+    // state = disponibleState;
 }
 
 void AppStateMachine::solicitarServicio(void) {

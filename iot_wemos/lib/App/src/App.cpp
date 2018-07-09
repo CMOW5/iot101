@@ -1,7 +1,9 @@
 #include "App.h"
 
 App::App() : mqttHandler(wifiHandler) {
-
+  disponibleState = new DisponibleState(this);
+  solicitandoServicioState = new SolicitandoServicioState(this);
+  state = disponibleState;
 }
 
 // Initialize the aplication modules
@@ -27,6 +29,23 @@ void App::initialize()
   wifiHandler.connectWifi();
   mqttHandler.connectMQTT();
 }
+
+void App::solicitarServicio(void) {
+  state->solicitarServicio();
+}
+
+void App::setState(State *newState) {
+  state = newState;
+}
+
+State* App::getDisponibleState(void) {
+  return disponibleState;
+}
+
+State* App::getSolicitandoServicioState(void) {
+  return solicitandoServicioState;
+}
+
 
 // the program main state machine
 void App::tasks()
@@ -62,8 +81,8 @@ void App::processEvents()
   if(events.solicitarServicio) {
     events.solicitarServicio = false;
     Serial.println("evento solicitar servicio");
-    appStateMachine.solicitarServicio();
-    mqttHandler.temperatureFeed->publish("temp");
+    solicitarServicio();
+    // mqttHandler.temperatureFeed->publish("temp");
   }
 
   if(events.event_btn2) {
