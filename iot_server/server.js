@@ -3,7 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var mqttApi = require('./mqtt-con/mqttApi');
+// var mqttApi = require('./mqtt-con/mqttApi');
+import MqttHandler from './mqtt-con/mqttApi';
+var mqttApi = new MqttHandler();
+
 var mqttClient = mqttApi.client;
 var socketApi = require('./socket/socketApi');
 var io = socketApi.io;
@@ -44,7 +47,7 @@ mqttClient.on('message', function (topic, message) {
   }
 
   if (topic === mqttApi.MQTT_TOPIC_HUMIDITY) {
-    io.sockets.emit('humidity', { value: message.toString() });
+    io.emit('humidity', { value: message.toString() });
   }
   // console.log('send temp', message.toString());
 });
