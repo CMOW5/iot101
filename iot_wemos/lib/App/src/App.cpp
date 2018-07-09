@@ -3,6 +3,7 @@
 App::App() : mqttHandler(wifiHandler) {
   disponibleState = new DisponibleState(this);
   solicitandoServicioState = new SolicitandoServicioState(this);
+  pedidoTomadoState = new PedidoTomadoState(this);
   state = disponibleState;
 }
 
@@ -50,6 +51,7 @@ State* App::getSolicitandoServicioState(void) {
 // the program main state machine
 void App::tasks()
 {
+  mqttHandler.connectMQTT(); // keep the mqtt connetion alive
   processEvents();
   /*
   // the state machine

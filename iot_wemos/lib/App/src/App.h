@@ -15,6 +15,7 @@
 #include "../../States/src/State.h"
 #include "../../States/src/SolicitandoServicioState/SolicitandoServicioState.h"
 #include "../../States/src/DisponibleState/DisponibleState.h"
+#include "../../States/src/PedidoTomadoState/PedidoTomadoState.h"
 
 class AppStateMachine;
 
@@ -24,11 +25,12 @@ class App
     int appState;
     Pins pins;
     Events events;
-    
+
     //states
     // AppStateMachine *appStateMachine;
     State *disponibleState;
     State *solicitandoServicioState;
+    State *pedidoTomadoState;
     State *state; // the current state
 
     void processEvents(void);
