@@ -16,11 +16,11 @@ void App::initialize()
   pins.D5.mode(INPUT_PULLUP);
   pins.D6.mode(INPUT_PULLUP);
   pins.D4.mode(OUTPUT);
-  digitalWrite(pins.D4.getValue(), LOW);
+  digitalWrite(pins.D4.value(), LOW);
 
   // Events
-  attachInterrupt(digitalPinToInterrupt(pins.D5.getValue()), Events::eventButton1, FALLING);
-  attachInterrupt(digitalPinToInterrupt(pins.D6.getValue()), Events::eventButton2, FALLING);
+  attachInterrupt(digitalPinToInterrupt(pins.D5.value()), Events::eventButton1, FALLING);
+  attachInterrupt(digitalPinToInterrupt(pins.D6.value()), Events::eventButton2, FALLING);
 
   delay(3000);
   Serial.print("App initialized");
@@ -59,9 +59,10 @@ void App::tasks()
 // process the app events
 void App::processEvents()
 {
-  if(events.event_btn1) {
-    events.event_btn1 = false;
-    Serial.println("event btn1");
+  if(events.solicitarServicio) {
+    events.solicitarServicio = false;
+    Serial.println("evento solicitar servicio");
+    appStateMachine.solicitarServicio();
     mqttHandler.temperatureFeed->publish("temp");
   }
 

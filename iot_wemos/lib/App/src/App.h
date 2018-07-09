@@ -5,10 +5,13 @@
 // #include "system_interrupt.h"
 #include <Arduino.h>
 #include "../../System/src/system_config.h"
-#include "Wifi_Handler.h"
-#include "MQTT_Handler.h"
-#include "Events.h"
-#include "Pins.h"
+#include "../../WifiHandler/src/Wifi_Handler.h"
+#include "../../MQTTHandler/src/MQTT_Handler.h"
+#include "../../Events/src/Events.h"
+#include "../../Pins/src/Pins.h"
+
+// states
+#include "../../States/src/AppStateMachine.h"
 
 class App
 {
@@ -18,6 +21,8 @@ class App
     WifiHandler wifiHandler;
     MQTTHandler mqttHandler;
     Events events;
+    //states
+    AppStateMachine appStateMachine;
 
     void processEvents(void);
 
