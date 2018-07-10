@@ -10,7 +10,6 @@ App::App() : mqttHandler(wifiHandler) {
 // Initialize the aplication modules
 void App::initialize()
 {
-  appState = 1;
   // initialize something
   // SYS_Initialize(); //initialize the system
   Serial.begin(9600);
@@ -18,8 +17,8 @@ void App::initialize()
   // pin init
   pins.D5.mode(INPUT_PULLUP);
   pins.D6.mode(INPUT_PULLUP);
-  pins.D4.mode(OUTPUT);
-  digitalWrite(pins.D4.value(), LOW);
+  // pins.D4.mode(OUTPUT);
+  // digitalWrite(pins.D4.value(), LOW);
 
   // Events
   attachInterrupt(digitalPinToInterrupt(pins.D5.value()), Events::eventButton1, FALLING);
@@ -28,11 +27,17 @@ void App::initialize()
   delay(3000);
   Serial.print("App initialized");
   wifiHandler.connectWifi();
+  mqttHandler.initialize();
   mqttHandler.connectMQTT();
+
 }
 
 void App::solicitarServicio(void) {
   state->solicitarServicio();
+}
+
+void App::confirmado(void) {
+  state->confirmado();
 }
 
 void App::setState(State *newState) {
@@ -51,30 +56,9 @@ State* App::getSolicitandoServicioState(void) {
 // the program main state machine
 void App::tasks()
 {
-  mqttHandler.connectMQTT(); // keep the mqtt connetion alive
+  mqttHandler.connectMQTT(); // keep the mqtt connection alive
+  mqttHandler.processSubscriptions(); // keep watching for mqqt subcriptions events
   processEvents();
-  /*
-  // the state machine
-  switch(appState) {
-    case (1) :
-      //init something
-      // appData.state = APP_STATE_IDLE;
-      break;
-
-    case (2):
-      // processEvents();
-      //appData.state = APP_STATE_IDLE;
-      break;
-
-    case (3):
-      // sleep mcu
-      // sleep(SLEEP_IDLE);
-      break;
-
-    default:
-      break;
-    }
-  */
 }
 
 // process the app events
@@ -84,7 +68,12 @@ void App::processEvents()
     events.solicitarServicio = false;
     Serial.println("evento solicitar servicio");
     solicitarServicio();
-    // mqttHandler.temperatureFeed->publish("temp");
+  }
+
+  if(events.confirmado) {
+    events.confirmado = false;
+    Serial.println("evento confirmado");
+    confirmado();
   }
 
   if(events.event_btn2) {
@@ -93,3 +82,25 @@ void App::processEvents()
     mqttHandler.humidityFeed->publish("hum");
   }
 }
+
+/*
+switch(appState) {
+  case (1) :
+    //init something
+    // appData.state = APP_STATE_IDLE;
+    break;
+
+  case (2):
+    // processEvents();
+    //appData.state = APP_STATE_IDLE;
+    break;
+
+  case (3):
+    // sleep mcu
+    // sleep(SLEEP_IDLE);
+    break;
+
+  default:
+    break;
+  }
+*/
