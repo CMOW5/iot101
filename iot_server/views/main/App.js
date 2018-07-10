@@ -8,6 +8,7 @@ class App extends Component {
     this.state = {
       btn1: 0,
       btn2: 0,
+      status: 0,
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateTemp = this.updateTemp.bind(this);
@@ -50,11 +51,16 @@ class App extends Component {
   render() {
     return (
       <div>
-      {/*
-      <span>{this.state.temp}</span>
-      */}
-      <span id="div1" style={{margin: '40px'}}>btn1</span>
-      <span id="div2" style={{margin: '40px'}}>btn2</span>
+        <h1>Mesa #1</h1>
+        <span>Estado: {this.state.status}</span>
+        <div>
+          <h6>Acciones</h6>
+          <button onClick = {this.handleClick}>confirmar</button>
+        </div>
+        {/*
+        <span id="div1" style={{margin: '40px'}}>btn1</span>
+        <span id="div2" style={{margin: '40px'}}>btn2</span>
+        */}    
       </div>
     );
   }
