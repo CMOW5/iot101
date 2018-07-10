@@ -2,6 +2,7 @@
 
 /* attrib initialization */
 bool Events::solicitarServicio = false;
+bool Events::confirmado = false;
 bool Events::event_btn2 = false;
 
 bool isEventButton1Scheduled = false;
@@ -48,4 +49,12 @@ void button2EventScheduled() {
   if (reading == 0) { // the button is still pressed
     Events::event_btn2 = true;
   }
+}
+
+
+// the program main state machine
+void Events::eventConfirmado(char *data, uint16_t len)
+{
+  // verify something first
+  Events::confirmado = true;
 }

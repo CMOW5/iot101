@@ -15,6 +15,7 @@ class Events
     //attributes
     int attr1 = 1;
     static bool solicitarServicio;
+    static bool confirmado;
     static bool event_btn2;
 
     // methods
@@ -22,6 +23,7 @@ class Events
     static void event2(void);
     static void eventButton1(void);
     static void eventButton2(void);
+    static void eventConfirmado(char *data, uint16_t len);
 };
 
 #endif
