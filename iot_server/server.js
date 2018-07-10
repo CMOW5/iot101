@@ -3,13 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-// var mqttApi = require('./mqtt-con/mqttApi');
-import MqttHandler from './mqtt-con/mqttApi';
-var mqttApi = new MqttHandler();
-
-var mqttClient = mqttApi.client;
-var socketApi = require('./socket/socketApi');
-var io = socketApi.io;
+const mqttConfig = require('./mqtt-con/mqtt-config');
 
 /* routes */
 var indexRouter = require('./routes/index');
@@ -37,20 +31,8 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-/* mqtt init */
-mqttClient.on('message', function (topic, message) {
-  console.log(topic);
-  console.log(message.toString());
- 
-  if (topic === mqttApi.MQTT_TOPIC_TEMPERATURE) {
-    io.emit('temperature', { value: message.toString() });
-  }
-
-  if (topic === mqttApi.MQTT_TOPIC_HUMIDITY) {
-    io.emit('humidity', { value: message.toString() });
-  }
-  // console.log('send temp', message.toString());
-});
+/* mqtt config */
+mqttConfig(app);
 
 // error handler
 app.use(function(err, req, res, next) {
