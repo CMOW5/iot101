@@ -13,5 +13,6 @@ private:
 public:
   PedidoTomadoState(App *app);
   void solicitarServicio(void);
+  void confirmado(void);
 };
 #endif

@@ -9,3 +9,7 @@ void DisponibleState::solicitarServicio(void) {
   app->mqttHandler.temperatureFeed->publish("temp");
   app->setState(app->getSolicitandoServicioState());
 }
+
+void DisponibleState::confirmado(void) {
+  Serial.println("confirmado estando disponible");
+}

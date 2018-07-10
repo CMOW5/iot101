@@ -7,3 +7,7 @@ PedidoTomadoState::PedidoTomadoState(App *app) {
 void PedidoTomadoState::solicitarServicio(void) {
   Serial.println("solicitando servicio estando pedido tomado");
 }
+
+void PedidoTomadoState::confirmado(void) {
+  Serial.println("confirmado estando pedido tomado");
+}

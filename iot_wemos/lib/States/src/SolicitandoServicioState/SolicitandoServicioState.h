@@ -17,6 +17,7 @@ public:
   // SolicitandoServicioState(AppStateMachine *appStateMachine);
   SolicitandoServicioState(App *app);
   void solicitarServicio(void);
+  void confirmado(void);
 };
 
 #endif

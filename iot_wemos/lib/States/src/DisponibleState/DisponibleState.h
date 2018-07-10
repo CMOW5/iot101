@@ -15,6 +15,7 @@ private:
 public:
   DisponibleState(App *app);
   void solicitarServicio(void);
+  void confirmado(void);
 };
 
 #endif
