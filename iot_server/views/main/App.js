@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import openSocket from 'socket.io-client';
 const socket = openSocket('http://localhost:3000');
 
+/* components */
+import MainTable from './components/main_table/MainTable';
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -51,16 +54,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <h1>Mesa #1</h1>
-        <span>Estado: {this.state.status}</span>
-        <div>
-          <h6>Acciones</h6>
-          <button onClick = {this.handleClick}>confirmar</button>
-        </div>
-        {/*
-        <span id="div1" style={{margin: '40px'}}>btn1</span>
-        <span id="div2" style={{margin: '40px'}}>btn2</span>
-        */}    
+        <MainTable />
       </div>
     );
   }
