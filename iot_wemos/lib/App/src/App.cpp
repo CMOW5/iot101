@@ -64,19 +64,19 @@ void App::tasks()
 // process the app events
 void App::processEvents()
 {
-  if(events.solicitarServicio) {
+  if (events.solicitarServicio) {
     events.solicitarServicio = false;
     Serial.println("evento solicitar servicio");
     solicitarServicio();
   }
 
-  if(events.confirmado) {
+  if (events.confirmado) {
     events.confirmado = false;
     Serial.println("evento confirmado");
     confirmado();
   }
 
-  if(events.event_btn2) {
+  if (events.event_btn2) {
     events.event_btn2 = false;
     Serial.println("event btn2");
     mqttHandler.humidityFeed->publish("hum");
