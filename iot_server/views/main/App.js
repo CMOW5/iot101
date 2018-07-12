@@ -54,6 +54,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <button onClick={this.handleClick}>send</button>
         <MainTable />
       </div>
     );
