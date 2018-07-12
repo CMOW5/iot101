@@ -1,6 +1,8 @@
 #include "MQTT_Handler.h"
 #include "Client.h"
 
+MQTTEvents MQTTHandler::mqttEvents;
+
 MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
   systemConfig = SystemConfig::instance();
 
@@ -21,7 +23,8 @@ MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
 
 void MQTTHandler::initialize(void) {
   /* set the subscriptions callbacks */
-  onoffbutton->setCallback(Events::eventConfirmado);
+  // onoffbutton->setCallback(Events::eventConfirmado);
+  onoffbutton->setCallback(MQTTHandler::mqttEvent);
 
   // Setup MQTT subscription for time feed
   mqtt->subscribe(onoffbutton);
@@ -46,9 +49,20 @@ void MQTTHandler::connectMQTT() {
    }
 }
 
+void MQTTHandler::mqttEvent(char *data, uint16_t len) {
+  mqttEvents.channel = (char *) "/feeds/onoff";
+  mqttEvents.setData(data);
+  mqttEvents.setLen(len);
+  mqttEvents.notify();
+}
+
 void MQTTHandler::processSubscriptions()
 {
   // this is our 'wait for incoming subscription packets and callback em' busy subloop
   // this will block all other code execution
   mqtt->processPackets(1000);
+}
+
+MQTTEvents* MQTTHandler::getEvents() {
+  return &mqttEvents;
 }

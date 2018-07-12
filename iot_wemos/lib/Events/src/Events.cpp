@@ -1,6 +1,6 @@
 #include "Events.h"
-
-/* attrib initialization */
+/*
+// attrib initialization
 bool Events::solicitarServicio = false;
 bool Events::confirmado = false;
 bool Events::event_btn2 = false;
@@ -58,3 +58,4 @@ void Events::eventConfirmado(char *data, uint16_t len)
   // verify something first
   Events::confirmado = true;
 }
+*/

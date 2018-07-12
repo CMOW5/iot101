@@ -1,10 +1,48 @@
 #include "App.h"
+#include "../../Events/src/IOEvents.h"
+#include "../../Events/src/MQTTEvents.h"
 
-App::App() : mqttHandler(wifiHandler) {
-  disponibleState = new DisponibleState(this);
+// App::App() : mqttHandler(wifiHandler) {}
+
+App::App(
+	MQTTHandler* mqHandler, WifiHandler* wHandler,
+	MQTTEvents* mqttSubject, IOEvents* ioSubject) {
+
+	// subscribe to the subjects
+	_mqttSubject = mqttSubject;
+	_mqttSubject->attach(this);
+	_ioSubject = ioSubject;
+	_ioSubject->attach(this);
+
+  // mqttHandler = new MQTTHandler(wifiHandler);
+	mqttHandler = mqHandler;
+	wifiHandler = wHandler;
+
+	disponibleState = new DisponibleState(this);
   solicitandoServicioState = new SolicitandoServicioState(this);
   pedidoTomadoState = new PedidoTomadoState(this);
   state = disponibleState;
+}
+
+App::~App() {
+	_mqttSubject->detach(this);
+	_ioSubject->detach(this);
+}
+
+void App::update(Subject* theChangedSubject) {
+	if (theChangedSubject == _mqttSubject) {
+		// print something
+		Serial.println("event desde socket subject!!!");
+		Serial.println("data = ");
+		Serial.println(_mqttSubject->getData());
+		Serial.println("channel = ");
+		Serial.println(_mqttSubject->channel);
+	}
+
+	if (theChangedSubject == _ioSubject) {
+		// print something
+		Serial.println("event desde io subject!!!");
+	}
 }
 
 // Initialize the aplication modules
@@ -20,16 +58,8 @@ void App::initialize()
   // pins.D4.mode(OUTPUT);
   // digitalWrite(pins.D4.value(), LOW);
 
-  // Events
-  attachInterrupt(digitalPinToInterrupt(pins.D5.value()), Events::eventButton1, FALLING);
-  attachInterrupt(digitalPinToInterrupt(pins.D6.value()), Events::eventButton2, FALLING);
-
   delay(3000);
   Serial.print("App initialized");
-  wifiHandler.connectWifi();
-  mqttHandler.initialize();
-  mqttHandler.connectMQTT();
-
 }
 
 void App::solicitarServicio(void) {
@@ -42,6 +72,9 @@ void App::confirmado(void) {
 
 void App::setState(State *newState) {
   state = newState;
+	/*
+		turn on the led with the given state
+	*/
 }
 
 State* App::getDisponibleState(void) {
@@ -52,35 +85,16 @@ State* App::getSolicitandoServicioState(void) {
   return solicitandoServicioState;
 }
 
-
 // the program main state machine
 void App::tasks()
 {
-  mqttHandler.connectMQTT(); // keep the mqtt connection alive
-  mqttHandler.processSubscriptions(); // keep watching for mqqt subcriptions events
   processEvents();
 }
 
 // process the app events
 void App::processEvents()
 {
-  if (events.solicitarServicio) {
-    events.solicitarServicio = false;
-    Serial.println("evento solicitar servicio");
-    solicitarServicio();
-  }
 
-  if (events.confirmado) {
-    events.confirmado = false;
-    Serial.println("evento confirmado");
-    confirmado();
-  }
-
-  if (events.event_btn2) {
-    events.event_btn2 = false;
-    Serial.println("event btn2");
-    mqttHandler.humidityFeed->publish("hum");
-  }
 }
 
 /*

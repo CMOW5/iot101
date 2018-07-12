@@ -1,15 +1,31 @@
 
 
 #include "App.h"
+#include "Wifi_Handler.h"
+#include "MQTT_Handler.h"
+#include "IOHandler.h"
 
-App app;
+WifiHandler wifiHandler;
+MQTTHandler mqttHandler(wifiHandler);
+IOHandler ioHandler;
+
+App* app = new App(
+  &mqttHandler,
+  &wifiHandler,
+  mqttHandler.getEvents(),
+  ioHandler.getEvents()
+);
 
 void setup() {
-  // Initialize all app modules, including application(s).
-  app.initialize();
+  app->initialize();
+  wifiHandler.connectWifi();
+  mqttHandler.initialize();
+  mqttHandler.connectMQTT();
 }
 
 void loop() {
   // the app state machine
-  app.tasks();
+  // app.tasks()
+  mqttHandler.connectMQTT(); // keep the mqtt connection alive
+  mqttHandler.processSubscriptions(); // keep watching for mqqt subcriptions events
 }
