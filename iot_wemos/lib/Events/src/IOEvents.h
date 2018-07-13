@@ -9,13 +9,19 @@
 #define IO_EVENTS_H_
 
 #include "Subject.h"
-#include <Arduino.h>
-#include <Ticker.h>
+#include <string>
+#include <cstring>
+
+using namespace std;
 
 class IOEvents : public Subject {
 public:
 	IOEvents();
 
+	int pin;
+	virtual int getPin();
+	virtual void setPin(int);
+	// virtual int GetPin();
 	// virtual int GetHour();
 	// virtual int GetMinute();
 	// virtual int GetSecond();
