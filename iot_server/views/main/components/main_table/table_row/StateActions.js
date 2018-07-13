@@ -31,7 +31,7 @@ export default class StateActions extends Component {
     const showDropdown = this.state.show ? "dropdown is-active" : "dropdown";
 
     return (
-      <div className={showDropdown}>
+      <div className="dropdown is-hoverable">
         <div className="dropdown-trigger">
           <button 
             onClick={this.toggleDropdown} 

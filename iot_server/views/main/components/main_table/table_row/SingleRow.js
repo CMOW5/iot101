@@ -15,6 +15,7 @@ export default class SingleRow extends Component {
 
   selectedAction(action) {
     console.log('selected action = ', action);
+    this.props.onSelectedAction(this.props.mesa, action);
   }
 
   renderStateColor(color) {
