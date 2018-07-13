@@ -2,6 +2,7 @@ var mqtt = require('mqtt');
 
 var mqttHandler = {
   MQTT_SERVER: '192.168.0.13',
+  MQTT_TOPIC_SOLICITAR_SERVICIO: 'allix/micro20/variable',
   MQTT_TOPIC_TEMPERATURE: 'ies/aula20/temperature',
   MQTT_TOPIC_HUMIDITY: 'ies/aula20/humidity',
   MQTT_FEEDS_ONOFF: '/feeds/onoff'
@@ -11,9 +12,9 @@ var client = mqtt.connect('mqtt://' + mqttHandler.MQTT_SERVER);
 
 mqttHandler.client = client;
 
-mqttHandler.publish = function () {
-  console.log('publishin to feeds');
-  client.publish('/feeds/onoff', 'hola from server');
+mqttHandler.publish = function (channel, message) {
+  console.log('publishin to channel ' + channel + ' message = ' + message);
+  client.publish(channel, message);
 }
 
 
