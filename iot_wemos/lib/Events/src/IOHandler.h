@@ -22,30 +22,29 @@ public:
   static IOEvents* getEvents();
   static void ioEvent();
 
-  static void eventButton1(void);
-	static void eventButton2(void);
-  static void ioEventTrigered(void);
+  static void interruptEventD5(void);
+	static void interruptEventD6(void);
+  static void triggerIOEvent(int);
 };
 
 IOEvents IOHandler::ioEvents;
 
 Ticker ticker1;
 Ticker ticker2;
-void button1EventScheduled(void);
-void button2EventScheduled(void);
+void isPinD5Debounced(void);
+void isPinD6Debounced(void);
 
 bool isEventButton1Scheduled = false;
 bool isEventButton2Scheduled = false;
 
 IOHandler::IOHandler() {
 	// Events
-	attachInterrupt(digitalPinToInterrupt(14), IOHandler::eventButton1, FALLING);
-	attachInterrupt(digitalPinToInterrupt(12), IOHandler::eventButton2, FALLING);
+	attachInterrupt(digitalPinToInterrupt(14), IOHandler::interruptEventD5, FALLING);
+	attachInterrupt(digitalPinToInterrupt(12), IOHandler::interruptEventD6, FALLING);
 }
 
 void IOHandler::ioEvent() {
   // ioEvents.setData(data);
-  // mqttEvents.setLen(len);
   ioEvents.notify();
 }
 
@@ -54,48 +53,45 @@ IOEvents* IOHandler::getEvents() {
 }
 
 // the program main state machine
-void IOHandler::eventButton1()
+void IOHandler::interruptEventD5()
 {
   if (isEventButton1Scheduled) return;
 
   // schedule the event to be debounced
   isEventButton1Scheduled = true;
-  ticker1.attach(0.1, button1EventScheduled);
+  ticker1.attach(0.1, isPinD5Debounced);
 }
 
-void button1EventScheduled() {
+void isPinD5Debounced() {
   ticker1.detach();
   isEventButton1Scheduled = false;
   int reading = digitalRead(14);
   if (reading == 0) { // the button is still pressed
-    IOHandler::ioEventTrigered();
-    // ioEvents.Notify();
-    // Notify();
+    IOHandler::triggerIOEvent(14);
   }
 }
 
 // the program main state machine
-void IOHandler::eventButton2()
+void IOHandler::interruptEventD6()
 {
   if (isEventButton2Scheduled) return;
 
   // schedule the event to be debounced
   isEventButton2Scheduled = true;
-  ticker2.attach(0.1, button2EventScheduled);
+  ticker2.attach(0.1, isPinD6Debounced);
 }
 
-void button2EventScheduled() {
+void isPinD6Debounced() {
   ticker2.detach();
   isEventButton2Scheduled = false;
   int reading = digitalRead(12);
   if (reading == 0) { // the button is still pressed
-    // Notify();
-    IOHandler::ioEventTrigered();
+    IOHandler::triggerIOEvent(12);
   }
 }
 
-void IOHandler::ioEventTrigered() {
-  // ioEvents.setData(data);
+void IOHandler::triggerIOEvent(int pin) {
+  ioEvents.setPin(pin);
   // mqttEvents.setLen(len);
   ioEvents.notify();
 }
