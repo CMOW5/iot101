@@ -4,12 +4,16 @@
 #include "Adafruit_MQTT.h"
 #include "Adafruit_MQTT_Client.h"
 #include "../../WifiHandler/src/Wifi_Handler.h"
-#include "../../Events/src/Events.h"
 #include "../../Events/src/MQTTEvents.h"
 
+// publishers
 #define MQTT_FEED_TEMP   "ies/aula20/temperature"
 #define MQTT_FEED_HUMI   "ies/aula20/humidity"
+#define MQTT_FEED_SOLICITAR_SERVICIO   "allix/micro20/variable"
+
+// subcriptions
 #define MQTT_FEED_ONOFF  "/feeds/onoff"
+
 
 class MQTTEvents;
 
@@ -22,18 +26,23 @@ class MQTTHandler
   */
 
   public:
+    MQTTHandler(WifiHandler wifihandler);
+
     Adafruit_MQTT_Client* mqtt;
+
     // publishers
+    Adafruit_MQTT_Publish* solicitarServicioFeed;
     Adafruit_MQTT_Publish* temperatureFeed;
     Adafruit_MQTT_Publish* humidityFeed;
+
     // subscribers
     Adafruit_MQTT_Subscribe* onoffbutton;
+
     static MQTTEvents mqttEvents;
 
     // methods
-    MQTTHandler(WifiHandler wifihandler);
     void initialize(void);
-    void connectMQTT(void);
+    void connect(void);
     void processSubscriptions(void);
 
     static MQTTEvents* getEvents();

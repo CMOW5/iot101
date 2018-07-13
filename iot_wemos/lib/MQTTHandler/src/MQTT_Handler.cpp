@@ -14,6 +14,7 @@ MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
     systemConfig->MQTT_USERNAME,
     systemConfig->MQTT_KEY);
 
+  solicitarServicioFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_SOLICITAR_SERVICIO);
   temperatureFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_TEMP);
   humidityFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_HUMI);
 
@@ -30,7 +31,7 @@ void MQTTHandler::initialize(void) {
   mqtt->subscribe(onoffbutton);
 }
 
-void MQTTHandler::connectMQTT() {
+void MQTTHandler::connect() {
   if (mqtt->connected())
    return;
  	Serial.print("Connecting to MQTT... ");
