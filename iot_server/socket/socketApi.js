@@ -27,7 +27,6 @@ socketApi.clearListeners = function() {
 
 socketApi.sendNotification = function(channel, message) {
   io.emit(channel, message);
-  // io.sockets.emit('hello', {msg: 'Hello World!'});
 }
 
 module.exports = socketApi;
