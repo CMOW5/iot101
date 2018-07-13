@@ -49,6 +49,7 @@ export default class Mesa {
   /* state setters */
 
   setState(newState) {
+    console.log('new state = ', newState);
     if (!isString(newState)) return setStateByInstance(newState);
 
     switch(newState) {
