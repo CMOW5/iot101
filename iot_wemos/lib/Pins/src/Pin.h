@@ -12,6 +12,8 @@ class Pin
     Pin(byte value);
     byte value();
     void mode(uint8_t mode);
+    void turnOn(void);
+    void turnOff(void);
 };
 
 #endif
