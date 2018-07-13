@@ -13,7 +13,7 @@ class WifiHandler
     WiFiClient client;
     // methods
     WifiHandler();  // This is the constructor
-    void connectWifi(void);
+    void connect(void);
 
   private:
     SystemConfig* systemConfig;

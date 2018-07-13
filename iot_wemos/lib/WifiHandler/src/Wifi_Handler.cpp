@@ -5,7 +5,7 @@ WifiHandler::WifiHandler() {
 	systemConfig = SystemConfig::instance();
 }
 
-void WifiHandler::connectWifi()
+void WifiHandler::connect()
 {
 	WiFi.begin(systemConfig->WIFI_SSID, systemConfig->WIFI_PASS);
   while (WiFi.status() != WL_CONNECTED) {
