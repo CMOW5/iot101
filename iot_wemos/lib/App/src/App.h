@@ -1,32 +1,29 @@
 #ifndef _APP_H_
 #define _APP_H_
 
-// #include "system_definitions.h"
-// #include "system_interrupt.h"
 #include <Arduino.h>
 #include "../../System/src/system_config.h"
+
+// RF connection
 #include "../../WifiHandler/src/Wifi_Handler.h"
 #include "../../MQTTHandler/src/MQTT_Handler.h"
-#include "../../Events/src/Events.h"
-#include "../../Pins/src/Pins.h"
 
+#include "../../Pins/src/Pins.h"
 #include "../../Events/src/Observer.h"
 
 // states
-// #include "../../States/src/AppStateMachine.h"
 #include "../../States/src/State.h"
 #include "../../States/src/SolicitandoServicioState/SolicitandoServicioState.h"
 #include "../../States/src/DisponibleState/DisponibleState.h"
 #include "../../States/src/PedidoTomadoState/PedidoTomadoState.h"
 
-class AppStateMachine;
 class IOEvents;
 class MQTTEvents;
 
 class App: public Observer
 {
   private:
-    Pins pins;
+    Pins* pins;
     MQTTEvents* _mqttSubject;
     IOEvents* _ioSubject;
 
@@ -40,12 +37,14 @@ class App: public Observer
     void processEvents(void);
 
   public:
-    App(MQTTHandler*, WifiHandler*, MQTTEvents*, IOEvents*);
+    App(Pins*, MQTTHandler*, WifiHandler*, MQTTEvents*, IOEvents*);
     virtual ~App();
-    virtual void update(Subject*); // overrides Observer operation
+
     WifiHandler *wifiHandler;
     MQTTHandler *mqttHandler;
-    // App();
+
+    // methods
+    virtual void update(Subject*); // overrides Observer operation
     void initialize(void);
     void tasks(void);
 
@@ -59,11 +58,19 @@ class App: public Observer
       @param newState the next state
     */
     void setState(State *newState);
+
+    void setState(char* newStateName);
+
     /**
       get the disponibleState instance
       @return the disponibleState instance
     */
     State* getDisponibleState(void);
+
+    /**
+      get the solicitandoServicio instance
+      @return the solicitandoServicio instance
+    */
     State* getSolicitandoServicioState(void);
 
 };
