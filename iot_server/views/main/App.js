@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
-import openSocket from 'socket.io-client';
-const socket = openSocket('http://localhost:3000');
+
+/* services */
+const socketHandler = require('./services/socket/socket-handler');
+
+// import openSocket from 'socket.io-client';
+// const socket = openSocket('http://localhost:3000');
 
 /* components */
 import MainTable from './components/main_table/MainTable';
@@ -9,53 +13,61 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      btn1: 0,
-      btn2: 0,
-      status: 0,
-    };
+      mesas: [
+        {number: 1, state: 'disponible'}, 
+        // {number: 2, state: 'solicitando_servicio'}
+      ],
+    }
     this.handleClick = this.handleClick.bind(this);
-    this.updateTemp = this.updateTemp.bind(this);
+    this.updateMesas = this.updateMesas.bind(this);
+    this.selectedAction = this.selectedAction.bind(this);
   }
 
   /**
    * the component mounted successfully
    */
   componentDidMount() {
-    socket.on('temperature', (temperature) => {
-      console.log('message from socket io', temperature.value);
-      this.updateTemp(temperature.value);
-      document.getElementById('div1').style.background='red';
-      setTimeout(
-        () => {
-          document.getElementById('div1').style.background='none';
-      }, 300);
+    socketHandler.socket.on('state_change', (newState) => {
+      console.log('new state = ', newState.value);
+      this.updateMesas(newState.value);
     });
-    socket.on('humidity', (humidity) => {
+    socketHandler.socket.on('temperature', (temperature) => {
+      console.log('message from socket io', temperature.value);
+    });
+    socketHandler.socket.on('humidity', (humidity) => {
       console.log('message from socket io', humidity.value);
-      this.updateTemp(humidity.value);
-      document.getElementById('div2').style.background='red';
-      setTimeout(
-        () => {
-          document.getElementById('div2').style.background='none';
-      }, 300);
     });
   }
 
-  updateTemp(temp) {
+  updateMesas(newState) {
+    const newMesas = this.state.mesas.map((mesa) => {
+      if (mesa.number === 1) {
+        mesa.state = newState;
+      }
+      return mesa;
+    });
     this.setState({
-      bt1: 1
+      mesas: newMesas
     });
   }
 
   handleClick() {
-    socket.emit('chat message', 'message from socket');
+    socketHandler.sendNotification('chat message', 'message from socket');
+    // this.socket.emit('chat message', 'message from socket');
     console.log('clicked');
   }
+
+  selectedAction(mesa, action) {
+    // socket.emit('chat message', 'message from socket');
+    socketHandler.sendNotification('chat message', action);
+    this.updateMesas(action);
+  }
+
   render() {
     return (
       <div>
         <button onClick={this.handleClick}>send</button>
-        <MainTable />
+        <MainTable onSelectedAction={this.selectedAction} mesas={this.state.mesas} />
       </div>
     );
   }
