@@ -6,7 +6,7 @@ DisponibleState::DisponibleState(App *app) {
 
 void DisponibleState::solicitarServicio(void) {
   Serial.println("solicitando servicio estando disponible");
-  app->mqttHandler->temperatureFeed->publish("temp");
+  app->mqttHandler->solicitarServicioFeed->publish("solicitando_servicio");
   app->setState(app->getSolicitandoServicioState());
 }
 
