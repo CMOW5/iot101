@@ -7,13 +7,12 @@
 #include "../../Events/src/MQTTEvents.h"
 
 // publishers
-#define MQTT_FEED_TEMP   "ies/aula20/temperature"
-#define MQTT_FEED_HUMI   "ies/aula20/humidity"
-#define MQTT_FEED_SOLICITAR_SERVICIO   "allix/micro20/variable"
+// TODO: make cargar datos an http request, or unsubscribe
+#define MQTT_FEED_CARGAR_DATOS  "restaurante/mesa_1/datos"
+#define MQTT_FEED_ESTADO  "restaurante/mesa_1/estado"
 
 // subcriptions
-#define MQTT_FEED_ONOFF  "/feeds/onoff"
-
+#define MQTT_SUB_ESTADO  "restaurante/mesa_1/server/estado"
 
 class MQTTEvents;
 
@@ -31,12 +30,11 @@ class MQTTHandler
     Adafruit_MQTT_Client* mqtt;
 
     // publishers
-    Adafruit_MQTT_Publish* solicitarServicioFeed;
-    Adafruit_MQTT_Publish* temperatureFeed;
-    Adafruit_MQTT_Publish* humidityFeed;
+    Adafruit_MQTT_Publish* estadoFeed;
+    Adafruit_MQTT_Publish* cargarDatosFeed;
 
     // subscribers
-    Adafruit_MQTT_Subscribe* onoffbutton;
+    Adafruit_MQTT_Subscribe* estadoSub;
 
     static MQTTEvents mqttEvents;
 
@@ -44,6 +42,10 @@ class MQTTHandler
     void initialize(void);
     void connect(void);
     void processSubscriptions(void);
+
+    void cargarDatos(void);
+    void solicitarServicio(void);
+    void prenderAlarma(void);
 
     static MQTTEvents* getEvents();
     static void mqttEvent(char *data, uint16_t len);

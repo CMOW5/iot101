@@ -14,21 +14,19 @@ MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
     systemConfig->MQTT_USERNAME,
     systemConfig->MQTT_KEY);
 
-  solicitarServicioFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_SOLICITAR_SERVICIO);
-  temperatureFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_TEMP);
-  humidityFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_HUMI);
+  cargarDatosFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_CARGAR_DATOS);
+  estadoFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_ESTADO);
 
   // Setup a feed called 'onoff' for subscribing to changes.
-  onoffbutton = new Adafruit_MQTT_Subscribe(mqtt, MQTT_FEED_ONOFF, MQTT_QOS_1);
+  estadoSub = new Adafruit_MQTT_Subscribe(mqtt, MQTT_SUB_ESTADO, MQTT_QOS_1);
 }
 
 void MQTTHandler::initialize(void) {
-  /* set the subscriptions callbacks */
-  // onoffbutton->setCallback(Events::eventConfirmado);
-  onoffbutton->setCallback(MQTTHandler::mqttEvent);
+  // set the subscriptions callbacks 
+  estadoSub->setCallback(MQTTHandler::mqttEvent);
 
   // Setup MQTT subscription for time feed
-  mqtt->subscribe(onoffbutton);
+  mqtt->subscribe(estadoSub);
 }
 
 void MQTTHandler::connect() {
@@ -66,4 +64,16 @@ void MQTTHandler::processSubscriptions()
 
 MQTTEvents* MQTTHandler::getEvents() {
   return &mqttEvents;
+}
+
+void MQTTHandler::cargarDatos() {
+  cargarDatosFeed->publish("datos");
+}
+
+void MQTTHandler::solicitarServicio() {
+  estadoFeed->publish("solicitando_servicio");
+}
+
+void MQTTHandler::prenderAlarma() {
+  estadoFeed->publish("alarma");
 }
