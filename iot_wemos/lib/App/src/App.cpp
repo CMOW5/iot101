@@ -21,10 +21,15 @@ App::App(
 	mqttHandler = mqHandler;
 	wifiHandler = wHandler;
 
+	bootState = new BootState(this);
 	disponibleState = new DisponibleState(this);
   solicitandoServicioState = new SolicitandoServicioState(this);
   pedidoTomadoState = new PedidoTomadoState(this);
-	setState(disponibleState);
+	atendidoState = new AtendidoState(this);
+	alarmaState = new AlarmaState(this);
+
+	// setState(bootState);
+	// setState(disponibleState);
 }
 
 App::~App() {
@@ -54,10 +59,9 @@ void App::update(Subject* theChangedSubject) {
 		Serial.println(t_pin);
 		if (t_pin == 14) {
 			solicitarServicio();
-		} else {
-
+		} else if (t_pin == 12) {
+			prenderAlarma();
 		}
-
 	}
 }
 
@@ -66,40 +70,60 @@ void App::initialize()
 {
   // initialize something
   // SYS_Initialize(); //initialize the system
-  Serial.begin(9600);
+	Serial.begin(9600);
+	delay(1000);
 
-  delay(3000);
+	wifiHandler->connect();
+	mqttHandler->initialize();
+	mqttHandler->connect();
+	setState(bootState);
+
   Serial.print("App initialized");
 }
 
 // actions
+void App::cargarDatos(void) {
+	Serial.println("obteniendo datos iniciales desde el servidor");
+	mqttHandler->cargarDatos();
+}
 
 void App::solicitarServicio(void) {
   state->solicitarServicio();
 }
 
-void App::confirmado(void) {
-  state->confirmado();
+void App::prenderAlarma(void) {
+  state->prenderAlarma();
 }
 
 void App::setState(State *newState) {
   state = newState;
-	if (state == disponibleState) {
+	if (state == bootState) {
+		cargarDatos();
+		pins->D1.turnOn();
+		pins->D2.turnOn();
+		pins->D3.turnOn();
+	}
+	else if (state == disponibleState) {
 		pins->D1.turnOn();
 		pins->D2.turnOff();
 		pins->D3.turnOff();
 	} else if (state == solicitandoServicioState) {
-		pins->D2.turnOn();
-		pins->D1.turnOff();
-		pins->D3.turnOff();
-	} else if (state == pedidoTomadoState) {
 		pins->D3.turnOn();
 		pins->D1.turnOff();
 		pins->D2.turnOff();
+	} else if (state == pedidoTomadoState) {
+		pins->D2.intermitent();
+		pins->D1.turnOff();
+		pins->D3.turnOff();
+	} else if (state == atendidoState) {
+		pins->D2.turnOn();
+		pins->D1.turnOff();
+		pins->D3.turnOff();
+	} else if (state == alarmaState) {
+		pins->D1.intermitent(); 
+		pins->D2.turnOff();
+		pins->D3.turnOff();
 	}
-	/*
-		turn on the led with the given state
-	*/
 }
 
 void App::setState(char* newStateName) {
@@ -108,12 +132,25 @@ void App::setState(char* newStateName) {
 	Serial.println(newStateName);
 	if (strcmp(newStateName, "disponible") == 0) {
 		setState(disponibleState);
+	} else if (strcmp(newStateName, "solicitando_servicio") == 0) {
+		setState(solicitandoServicioState);
 	} else if (strcmp(newStateName, "pedido_tomado") == 0) {
 		setState(pedidoTomadoState);
-	} else if (strcmp(newStateName, "no_disponible") == 0) {
-
+	} else if (strcmp(newStateName, "atendido") == 0) {
+		setState(atendidoState);
+	} else if (strcmp(newStateName, "alarma") == 0) {
+		setState(alarmaState);
 	}
 }
+
+// the program main state machine
+void App::tasks()
+{
+	mqttHandler->connect(); // keep the mqtt connection alive
+	mqttHandler->processSubscriptions(); // keep watching for mqqt subcriptions events
+}
+
+/* state getters */
 
 State* App::getDisponibleState(void) {
   return disponibleState;
@@ -123,36 +160,6 @@ State* App::getSolicitandoServicioState(void) {
   return solicitandoServicioState;
 }
 
-// the program main state machine
-void App::tasks()
-{
-  processEvents();
+State* App::getAlarmaState(void) {
+	return alarmaState;
 }
-
-// process the app events
-void App::processEvents()
-{
-
-}
-
-/*
-switch(appState) {
-  case (1) :
-    //init something
-    // appData.state = APP_STATE_IDLE;
-    break;
-
-  case (2):
-    // processEvents();
-    //appData.state = APP_STATE_IDLE;
-    break;
-
-  case (3):
-    // sleep mcu
-    // sleep(SLEEP_IDLE);
-    break;
-
-  default:
-    break;
-  }
-*/
