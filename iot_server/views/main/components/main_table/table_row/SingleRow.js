@@ -22,18 +22,21 @@ export default class SingleRow extends Component {
     let tagClass = 'tag is-medium';
 
     switch(color) {
+      case 'red': 
+        return tagClass + ' is-danger'; 
+      
+      case 'flashing-red': 
+        return tagClass + ' is-black'; 
+
       case 'green':
         return tagClass + ' is-success'; 
       
       case 'flashing-green': 
-        return tagClass + ' is-info'; 
-      
-      case 'yellow': 
         return tagClass + ' is-warning'; 
-      
-      case 'red': 
-        return tagClass + ' is-danger'; 
-      
+
+      case 'blue': 
+        return tagClass + ' is-link'; 
+       
       default:
         return;
     }

@@ -58,6 +58,12 @@ export default class StateActions extends Component {
               className="dropdown-item">
               pedido tomado
             </a>
+            <a 
+              onClick={this.handleSelectedAction}
+              name = "atendido"
+              className="dropdown-item">
+              atendido
+            </a>
             <hr className="dropdown-divider" />
             <a 
               onClick={this.handleSelectedAction}

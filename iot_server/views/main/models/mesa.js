@@ -3,8 +3,11 @@ import isString from 'lodash/isString';
 
 /* states */
 import DisponibleState from './state/states/disponible-state';
-import PedidoTomadoState from './state/states/pedido-tomado-state';
 import SolicitandoServicioState from './state/states/solicitando-servicio-state';
+import PedidoTomadoState from './state/states/pedido-tomado-state';
+import AtendidoState from './state/states/atendido-state';
+import AlarmaState from './state/states/alarma-state';
+
 
 export default class Mesa {
   constructor(number, state) {
@@ -14,6 +17,8 @@ export default class Mesa {
     this.disponibleState = new DisponibleState(this);
     this.solicitandoServicioState = new SolicitandoServicioState(this);
     this.pedidoTomadoState = new PedidoTomadoState(this);
+    this.atendidoState = new AtendidoState(this);
+    this.alarmaState = new AlarmaState(this);
   }
 
   /* state machine actions */
@@ -46,6 +51,14 @@ export default class Mesa {
     return this.solicitandoServicioState;
   }
 
+  getAtendidoState() {
+    return this.atendidoState;
+  }
+
+  getAlarmaState() {
+    return this.alarmaState;
+  }
+
   /* state setters */
 
   setState(newState) {
@@ -61,6 +74,12 @@ export default class Mesa {
         return;
       case 'pedido_tomado':
         this.state = new PedidoTomadoState(this);
+        return;
+      case 'atendido':
+        this.state = new AtendidoState(this);
+        return;
+      case 'alarma':
+        this.state = new AlarmaState(this);
         return;
       default:
         return;

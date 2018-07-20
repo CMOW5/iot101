@@ -6,7 +6,7 @@ export default class SolicitandoServicioState extends State {
     super();
     this.mesa = mesa;
     this.name = 'solicitando servicio';
-    this.color = 'yellow';
+    this.color = 'blue';
   }
   
   confirmado() {

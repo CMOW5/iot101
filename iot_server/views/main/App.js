@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 
 /* services */
 const socketHandler = require('./services/socket/socket-handler');
+const axios = require('axios');
 
 // import openSocket from 'socket.io-client';
 // const socket = openSocket('http://localhost:3000');
@@ -21,6 +22,7 @@ class App extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.updateMesas = this.updateMesas.bind(this);
     this.selectedAction = this.selectedAction.bind(this);
+    this.loadMesas = this.loadMesas.bind(this);
   }
 
   /**
@@ -31,11 +33,24 @@ class App extends Component {
       console.log('new state = ', newState.value);
       this.updateMesas(newState.value);
     });
-    socketHandler.socket.on('temperature', (temperature) => {
-      console.log('message from socket io', temperature.value);
-    });
-    socketHandler.socket.on('humidity', (humidity) => {
-      console.log('message from socket io', humidity.value);
+    this.loadMesas();
+  }
+
+  loadMesas() {
+    console.log('get mesas');
+    // Make a request for a user with a given ID
+    axios.get('http://localhost:3000/mesa')
+    .then((response) => {
+      const mesa = response.data;
+      this.setState({
+        mesas: [
+          {number: mesa.id, state: mesa.estado},
+        ],
+      });
+    })
+    .catch(function (error) {
+      console.log('error = ', error);
+      console.log(error);
     });
   }
 
@@ -58,8 +73,7 @@ class App extends Component {
   }
 
   selectedAction(mesa, action) {
-    // socket.emit('chat message', 'message from socket');
-    socketHandler.sendNotification('chat message', action);
+    socketHandler.sendNotification('state_change', action);
     this.updateMesas(action);
   }
 

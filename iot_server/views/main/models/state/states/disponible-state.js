@@ -6,7 +6,7 @@ export default class DisponibleState extends State {
     super();
     this.mesa = mesa;
     this.name = 'disponible';
-    this.color = 'green';
+    this.color = 'red';
   }
   
   confirmado() {
