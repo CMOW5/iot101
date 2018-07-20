@@ -13,6 +13,8 @@ private:
 public:
   PedidoTomadoState(App *app);
   void solicitarServicio(void);
-  void confirmado(void);
+  void pedidoTomado(void);
+  void atendido(void);
+  void prenderAlarma(void);
 };
 #endif

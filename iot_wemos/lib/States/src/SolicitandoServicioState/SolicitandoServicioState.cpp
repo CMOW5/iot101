@@ -5,11 +5,18 @@ SolicitandoServicioState::SolicitandoServicioState(App *app) {
 }
 
 void SolicitandoServicioState::solicitarServicio(void) {
-  Serial.println("solicitando servicio estando ya solicitando");
-  // app->mqttHandler.temperatureFeed->publish("temp");
-  // app->setState(app->getSolicitandoServicioState());
+    Serial.println("solicitando servicio estando ya solicitando");
 }
 
-void SolicitandoServicioState::confirmado(void) {
-  Serial.println("confirmado estando solicitando");
+void SolicitandoServicioState::pedidoTomado(void) {
+
+}
+
+void SolicitandoServicioState::atendido(void) {
+
+}
+
+void SolicitandoServicioState::prenderAlarma(void) {
+  app->mqttHandler->prenderAlarma();
+  app->setState(app->getAlarmaState());
 }

@@ -6,10 +6,19 @@ DisponibleState::DisponibleState(App *app) {
 
 void DisponibleState::solicitarServicio(void) {
   Serial.println("solicitando servicio estando disponible");
-  app->mqttHandler->solicitarServicioFeed->publish("solicitando_servicio");
+  app->mqttHandler->solicitarServicio();
   app->setState(app->getSolicitandoServicioState());
 }
 
-void DisponibleState::confirmado(void) {
-  Serial.println("confirmado estando disponible");
+void DisponibleState::pedidoTomado(void) {
+
+}
+
+void DisponibleState::atendido(void) {
+
+}
+
+void DisponibleState::prenderAlarma(void) {
+  app->mqttHandler->prenderAlarma();
+  app->setState(app->getAlarmaState());
 }
