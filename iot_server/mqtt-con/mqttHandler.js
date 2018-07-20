@@ -5,7 +5,8 @@ var mqttHandler = {
   MQTT_TOPIC_SOLICITAR_SERVICIO: 'allix/micro20/variable',
   MQTT_TOPIC_TEMPERATURE: 'ies/aula20/temperature',
   MQTT_TOPIC_HUMIDITY: 'ies/aula20/humidity',
-  MQTT_FEEDS_ONOFF: '/feeds/onoff'
+  MQTT_FEEDS_ONOFF: 'restaurante/mesa_1/server/estado'
+  // MQTT_FEEDS_ONOFF: '/feeds/onoff'
 };
 
 var client = mqtt.connect('mqtt://' + mqttHandler.MQTT_SERVER);
