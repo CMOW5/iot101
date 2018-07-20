@@ -8,10 +8,10 @@
 WifiHandler wifiHandler;
 MQTTHandler mqttHandler(wifiHandler);
 IOHandler ioHandler;
-Pins *pins = new Pins();
+Pins pins;
 
-App* app = new App(
-  pins,
+App app(
+  &pins,
   &mqttHandler,
   &wifiHandler,
   mqttHandler.getEvents(),
@@ -22,23 +22,17 @@ void initPins(void);
 
 void setup() {
   initPins();
-  app->initialize();
-  wifiHandler.connect();
-  mqttHandler.initialize();
-  mqttHandler.connect();
+  app.initialize();
 }
 
 void loop() {
-  // the app state machine
-  // app.tasks()
-  mqttHandler.connect(); // keep the mqtt connection alive
-  mqttHandler.processSubscriptions(); // keep watching for mqqt subcriptions events
+  app.tasks();
 }
 
 void initPins() {
-  pins->D5.mode(INPUT_PULLUP);
-  pins->D6.mode(INPUT_PULLUP);
-  pins->D1.mode(OUTPUT);
-  pins->D2.mode(OUTPUT);
-  pins->D3.mode(OUTPUT);
+  pins.D5.mode(INPUT_PULLUP);
+  pins.D6.mode(INPUT_PULLUP);
+  pins.D1.mode(OUTPUT); // red
+  pins.D2.mode(OUTPUT); // green
+  pins.D3.mode(OUTPUT); // blue
 }
