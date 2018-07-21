@@ -67,7 +67,7 @@ var serverConfig = Object.assign({}, config, {
 
 var frontEndConfig = Object.assign({}, config, {
   name: "frontEnd",
-  entry: "./views/main/index.js",
+  entry: ['babel-polyfill', "./views/main/index.js"],
   output: {
     path: path.join(__dirname, "/build"),
     filename: "index-bundle.js"
