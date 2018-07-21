@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      estado: {
+      state: {
         type: Sequelize.ENUM(
           'disponible', 
           'solicitando_servicio', 
