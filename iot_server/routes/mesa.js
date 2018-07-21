@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
   // res.json({ user: 'tobi' });
   const mesaId = 1; // find the mesa id here
   Mesa.findById(mesaId).then((mesa) => {
-    res.json(mesa);
+    res.json({data: mesa});
   });
 });
 
