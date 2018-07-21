@@ -15,14 +15,14 @@ MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
     systemConfig->MQTT_KEY);
 
   cargarDatosFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_CARGAR_DATOS);
-  estadoFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_ESTADO);
+  estadoFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_CAMBIAR_ESTADO);
 
   // Setup a feed called 'onoff' for subscribing to changes.
   estadoSub = new Adafruit_MQTT_Subscribe(mqtt, MQTT_SUB_ESTADO, MQTT_QOS_1);
 }
 
 void MQTTHandler::initialize(void) {
-  // set the subscriptions callbacks 
+  // set the subscriptions callbacks
   estadoSub->setCallback(MQTTHandler::mqttEvent);
 
   // Setup MQTT subscription for time feed

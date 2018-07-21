@@ -9,7 +9,7 @@
 // publishers
 // TODO: make cargar datos an http request, or unsubscribe
 #define MQTT_FEED_CARGAR_DATOS  "restaurante/mesa_1/datos"
-#define MQTT_FEED_ESTADO  "restaurante/mesa_1/estado"
+#define MQTT_FEED_CAMBIAR_ESTADO  "restaurante/mesa_1/estado"
 
 // subcriptions
 #define MQTT_SUB_ESTADO  "restaurante/mesa_1/server/estado"
