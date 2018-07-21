@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
 
-/* services */
-const socketHandler = require('../../services/socket/socket-handler');
+/* styles */
+import './main-table.css';
 
 /* models */
 import Mesa from '../../models/mesa';
 
 /* components */
-import SingleRow from './table_row/SingleRow';
+import SingleMesaRow from './table_row/SingleMesaRow';
 
 export default class MainTable extends Component {
   constructor(props) {
@@ -17,24 +17,22 @@ export default class MainTable extends Component {
   }
 
   selectedAction(mesa, action) {
-    // socket.emit('chat message', 'message from socket');
-    // socketHandler.sendNotification('chat message', action);
     this.props.onSelectedAction(mesa, action);
   }
 
   render() {
 
     const mesasRows = this.props.mesas.map((mesa) => {
-      const mesaObject = new Mesa(mesa.number, mesa.state);
-      return (<SingleRow 
-              mesa={mesaObject} 
-              key={mesa.number}
+      const mesaModel = new Mesa(mesa.id, mesa.state);
+      return (<SingleMesaRow 
+              mesa={mesaModel} 
+              key={mesa.id}
               onSelectedAction={this.selectedAction}
             />);
     });
 
     return (
-      <div>
+      <div className="main-table">
         <table className="table table is-bordered">
           <thead>
             <tr>

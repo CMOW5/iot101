@@ -1,19 +1,11 @@
 import React, {Component} from 'react';
 
+/* state actions */
+
 export default class StateActions extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      show: false,
-    }
-    this.toggleDropdown = this.toggleDropdown.bind(this);
     this.handleSelectedAction = this.handleSelectedAction.bind(this);
-  }
-
-  toggleDropdown() {
-    this.setState((prevState) => ({
-      show: !prevState.show
-    }));
   }
 
   /**
@@ -27,9 +19,6 @@ export default class StateActions extends Component {
   }
 
   render() {
-
-    const showDropdown = this.state.show ? "dropdown is-active" : "dropdown";
-
     return (
       <div className="dropdown is-hoverable">
         <div className="dropdown-trigger">
@@ -40,7 +29,7 @@ export default class StateActions extends Component {
             aria-controls="dropdown-menu">
             <span>acciones</span>
             <span className="icon is-small">
-              <i className="fas fa-angle-down" aria-hidden="true"></i>
+              <i className="fa fa-angle-down" aria-hidden="true"></i>
             </span>
           </button>
         </div>
@@ -67,9 +56,9 @@ export default class StateActions extends Component {
             <hr className="dropdown-divider" />
             <a 
               onClick={this.handleSelectedAction}
-              name = "no_disponible"
+              name = "alarma"
               className="dropdown-item">
-              no disponible
+              alarma
             </a>
           </div>
         </div>

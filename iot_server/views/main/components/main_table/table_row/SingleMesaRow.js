@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 
-/* the mesa state machine */
-// import Mesa from '../../../models/mesa';
+/* styles */
+import './mesa-row.css';
 
 /* components */
 import StateActions from './StateActions';
 
-export default class SingleRow extends Component {
+export default class SingleMesaRow extends Component {
   constructor(props) {
     super(props);
     this.renderStateColor = this.renderStateColor.bind(this);
@@ -14,7 +14,6 @@ export default class SingleRow extends Component {
   }
 
   selectedAction(action) {
-    console.log('selected action = ', action);
     this.props.onSelectedAction(this.props.mesa, action);
   }
 
@@ -44,15 +43,15 @@ export default class SingleRow extends Component {
 
   render() {
 
-    const mesaNumber = this.props.mesa.number;
+    const id = this.props.mesa.id;
     const mesaState = this.props.mesa.getStateName();
     const color = this.props.mesa.getStateColor();
   
     return (
       <tr>
-        <th>{mesaNumber}</th>
+        <th>{id}</th>
         <td>
-          <div>
+          <div className="state-column">
             <span className={this.renderStateColor(color)}>{mesaState}</span>
           </div>
         </td>
