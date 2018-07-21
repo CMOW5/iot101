@@ -9,7 +9,7 @@ const Mesa = dbconnection.define('mesa', {
       isInt: true, // checks for valid integers
     },
   },
-  estado: {
+  state: {
     type: DataTypes.ENUM(
       'disponible', 
       'solicitando_servicio', 
