@@ -1,17 +1,10 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
-var cors = require('cors');
-var logger = require('morgan');
+const registerMiddlewares = require('./config/middlewares');
 
 /* mqtt config */
-const mqttConfig = require('./mqtt-con/mqtt-config');
-
-/* database config */
-var dbconnection = require('./database/connection');
-var Mesa = require('./models/mesa');
-
+const mqttConfig = require('./services/mqtt/mqtt-config');
 
 /* routes */
 var indexRouter = require('./routes/index');
@@ -24,46 +17,21 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(cors());
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'build')));
+registerMiddlewares(app);
 
 /* routes */
 app.use('/', indexRouter);
-app.use('/mesa', mesaRouter);
+app.use('/api/mesas', mesaRouter);
 app.use('/test', testRouter);
+
+/* mqtt config */
+mqttConfig(app);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
-Mesa.findById(1).then(mesa => {
-  console.log('mesa = ', mesa.estado);
-});
-
-// Mesa.testfunct();
-
-/* db config */
-/* dbconnection
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-        // search for known ids
-    Mesa.findById(1).then(mesa => {
-      console.log('mesa = ', mesa.estado);
-    });
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
- */
-/* mqtt config */
-mqttConfig(app);
 
 // error handler
 app.use(function(err, req, res, next) {
