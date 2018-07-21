@@ -10,15 +10,15 @@ import AlarmaState from './state/states/alarma-state';
 
 
 export default class Mesa {
-  constructor(number, state) {
-    this.number = number;
-    this.state = {}; // init the current state
-    this.setState(state);
+  constructor(id, state) {
+    this.id = id;
+    this.state = {}; 
     this.disponibleState = new DisponibleState(this);
     this.solicitandoServicioState = new SolicitandoServicioState(this);
     this.pedidoTomadoState = new PedidoTomadoState(this);
     this.atendidoState = new AtendidoState(this);
     this.alarmaState = new AlarmaState(this);
+    this.setState(state); // init the current state
   }
 
   /* state machine actions */
@@ -30,7 +30,7 @@ export default class Mesa {
     this.state.atendido();
   }
   
-  /* state getters */
+  /* state properties getters */
   getStateName() {
     return this.state.name;
   }
@@ -39,6 +39,7 @@ export default class Mesa {
     return this.state.color;
   }
 
+  /* state instance getters */
   getDisponibleState() {
     return this.disponibleState;
   }
@@ -62,24 +63,23 @@ export default class Mesa {
   /* state setters */
 
   setState(newState) {
-    console.log('new state = ', newState);
     if (!isString(newState)) return setStateByInstance(newState);
 
     switch(newState) {
       case 'disponible':
-        this.state = new DisponibleState(this);
+        this.state = this.disponibleState
         return;
       case 'solicitando_servicio':
-        this.state = new SolicitandoServicioState(this);
+        this.state = this.solicitandoServicioState;
         return;
       case 'pedido_tomado':
-        this.state = new PedidoTomadoState(this);
+        this.state = this.pedidoTomadoState;
         return;
       case 'atendido':
-        this.state = new AtendidoState(this);
+        this.state = this.atendidoState;
         return;
       case 'alarma':
-        this.state = new AlarmaState(this);
+        this.state = this.alarmaState;
         return;
       default:
         return;
