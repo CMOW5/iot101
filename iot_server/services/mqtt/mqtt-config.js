@@ -1,21 +1,19 @@
 'use strict';
 
-const socketApi = require('../socket/socketApi');
-const mqttHandler = require('./mqttHandler.js');
-const mqttClient = mqttHandler.client;
+const socketService = require('../socket/socket-service');
+const mqttService = require('./mqtt-service');
+const mqttClient = mqttService.client;
 
 /* repositories */
-var Mesa = require('../models/mesa');
+var Mesa = require('../../models/mesa');
 
+/* mqtt configuration */ 
 module.exports = (app) => {
 
   /* mqtt init */
   mqttClient.on('connect', function () {
-    mqttClient.subscribe(mqttHandler.MQTT_TOPIC_TEMPERATURE);
-    mqttClient.subscribe(mqttHandler.MQTT_TOPIC_HUMIDITY);
-    mqttClient.subscribe(mqttHandler.MQTT_TOPIC_SOLICITAR_SERVICIO);
-    mqttClient.subscribe('restaurante/mesa_1/estado');
-    mqttClient.subscribe('restaurante/mesa_1/datos');
+    mqttClient.subscribe(mqttService.MQTT_FEED_CAMBIAR_ESTADO);
+    mqttClient.subscribe(mqttService.MQTT_FEED_CARGAR_DATOS);
   });  
 
   /* mqtt messages handlers */
@@ -23,51 +21,51 @@ module.exports = (app) => {
     console.log(topic);
     console.log(message.toString());
     
-    if (topic === 'restaurante/mesa_1/estado') {
+    if (topic === mqttService.MQTT_FEED_CAMBIAR_ESTADO) {
       const mesaId = 1; // find the mesa id here
       const newState = message.toString();
       
       // save the new state in the db
       Mesa.findById(mesaId).then((mesa) => {
-        mesa.estado = newState;
+        mesa.state = newState;
         return mesa.save();
       })
       .then(() => {
         // notify the front end that the mesa x has a new state y 
-        socketApi.sendNotification('state_change', {value: newState});
+        socketService.sendNotification('state_change', {value: newState});
         console.log('mesa updated');
       });
     }
 
-    if (topic === 'restaurante/mesa_1/datos') {
+    if (topic === mqttService.MQTT_FEED_CARGAR_DATOS) {
       console.log('cargar datos desde el servidor');
       const mesaId = 1; // find the mesa id here
       Mesa.findById(mesaId).then((mesa) => {
-        const newState = mesa.estado;
+        const newState = mesa.state;
         console.log('estado a enviar = ', newState);
-        mqttHandler.publish(mqttHandler.MQTT_FEEDS_ONOFF, newState);
+        mqttService.publish(mqttService.MQTT_ENVIAR_ESTADO, newState);
       });
     }
   });
 
   /* sockets messages handlers */
-  socketApi.addListener('chat message', function(msg) {
+  socketService.addListener('chat message', function(msg) {
     console.log('message executed: ' + msg);
-    mqttHandler.publish(mqttHandler.MQTT_FEEDS_ONOFF, msg);
+    mqttService.publish(mqttService.MQTT_ENVIAR_ESTADO, msg);
   });
 
   /* sockets messages handlers */
-  socketApi.addListener('state_change', function(newState) {
+  socketService.addListener('state_change', function(newState) {
     console.log('message executed: ' + newState);
     const mesaId = 1; // find the mesa id here
     // save the new state in the db
     Mesa.findById(mesaId).then((mesa) => {
-      mesa.estado = newState;
+      mesa.state = newState;
       return mesa.save();
     })
     .then(() => {
       // notify the WEMOS the new state
-      mqttHandler.publish(mqttHandler.MQTT_FEEDS_ONOFF, newState);
+      mqttService.publish(mqttService.MQTT_ENVIAR_ESTADO, newState);
     });
   });
 }
