@@ -5,7 +5,8 @@ AtendidoState::AtendidoState(App *app) {
 }
 
 void AtendidoState::solicitarServicio(void) {
-
+  app->mqttHandler->solicitarServicio();
+  app->setState(app->getSolicitandoServicioState());
 }
 
 void AtendidoState::pedidoTomado(void) {
