@@ -6,15 +6,7 @@ export default class DisponibleState extends State {
     super();
     this.mesa = mesa;
     this.name = 'disponible';
+    this.action = 'disponible'; // the key action to change to this state
     this.color = 'red';
   }
-  
-  confirmado() {
-
-  }
-  
-  atendido() {
-    
-  }
-  // other states
 }

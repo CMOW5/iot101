@@ -6,15 +6,7 @@ export default class SolicitandoServicioState extends State {
     super();
     this.mesa = mesa;
     this.name = 'solicitando servicio';
+    this.action = 'solicitando_servicio'; // the key action to change to this state
     this.color = 'blue';
   }
-  
-  confirmado() {
-
-  }
-  
-  atendido() {
-    
-  }
-  // other states
 }

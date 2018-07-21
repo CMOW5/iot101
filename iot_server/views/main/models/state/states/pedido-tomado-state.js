@@ -6,15 +6,7 @@ export default class PedidoTomadoState extends State {
     super();
     this.mesa = mesa;
     this.name = 'pedido tomado';
+    this.action = 'pedido_tomado'; // the key action to change to this state
     this.color = 'flashing-green';
   }
-  
-  confirmado() {
-
-  }
-  
-  atendido() {
-    
-  }
-  // other states
 }

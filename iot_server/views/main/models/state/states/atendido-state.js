@@ -6,15 +6,7 @@ export default class AtendidoState extends State {
     super();
     this.mesa = mesa;
     this.name = 'atendido';
+    this.action = 'atendido'; // the key action to change to this state
     this.color = 'green';
   }
-  
-  confirmado() {
-
-  }
-  
-  atendido() {
-    
-  }
-  // other states
 }
