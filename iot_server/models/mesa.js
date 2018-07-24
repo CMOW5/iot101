@@ -1,9 +1,12 @@
 var dbconnection = require('../database/connection');
 var DataTypes = dbconnection.DataTypes;
 
+const MesaHistorial = require('./mesas-historial');
+
 const Mesa = dbconnection.define('mesa', {
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
+    autoIncrement: true,
     primaryKey: true,
     validate: {
       isInt: true, // checks for valid integers
@@ -22,7 +25,9 @@ const Mesa = dbconnection.define('mesa', {
   // tableName: 'mesas',
   
 },{
-  timestamps: false,
+  timestamps: true,
 });
+
+Mesa.hasMany(MesaHistorial, {as: 'History'});
 
 module.exports = Mesa;
