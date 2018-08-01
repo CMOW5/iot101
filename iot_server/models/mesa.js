@@ -1,6 +1,10 @@
 const dbconnection = require('../database/connection');
 const DataTypes = dbconnection.DataTypes;
 
+/* utils */
+const moment = require('moment');
+
+/* repositories */
 const MesaHistorial = require('./mesas-historial');
 
 const Mesa = dbconnection.define('mesa', {
@@ -21,13 +25,74 @@ const Mesa = dbconnection.define('mesa', {
       'atendido',
       'alarma'),
   },
-  // define the table's name
-  // tableName: 'mesas',
-
 }, {
   timestamps: true,
 });
 
+// relationships
 Mesa.hasMany(MesaHistorial, {as: 'History'});
+
+/**
+ * update the mesa state with the given id
+ * @param {number} mesaId
+ * @param {string} newState
+ */
+Mesa.updateMesaState = async function(mesaId, newState) {
+  const mesa = await this.findById(mesaId);
+  const timeDiff = calculateTimeDiff(mesa.updatedAt);
+  const fromState = mesa.state;
+
+  mesa.state = newState; // update the current mesa state
+
+  return Promise.all([
+    MesaHistorial.create({
+      mesaId: mesa.id,
+      from: fromState,
+      to: newState,
+      timeDiff: timeDiff,
+    }),
+    mesa.save(),
+  ]);
+
+  /*
+  return this.findById(mesaId)
+    .then((mesa) => {
+      let end = mesa.updatedAt;
+      let now = moment();
+      let duration = moment.duration(now.diff(end));
+      let hours = duration.asHours();
+      const fromState = mesa.state;
+
+      mesa.state = newState;
+
+      return Promise.all([
+        MesaHistorial.create({
+          mesaId: mesa.id,
+          from: fromState,
+          to: newState,
+          timeDiff: hours,
+        }),
+        mesa.save(),
+      ]);
+    }).then((mesaHistorial) => {
+      return mesaHistorial;
+    }).catch((error) => {
+      return error;
+    });
+    */
+};
+
+/**
+ * calculates the time difference between the given
+ * time and the current time
+ *
+ * @param {*} stateTime
+ * @return {number} the time difference in hours
+ */
+function calculateTimeDiff(stateTime) {
+  let now = moment();
+  let duration = moment.duration(now.diff(stateTime));
+  return duration.asHours();
+}
 
 module.exports = Mesa;
