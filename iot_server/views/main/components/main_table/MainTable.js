@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 /* styles */
 import './main-table.css';
@@ -12,12 +13,11 @@ import SingleMesaRow from './table_row/SingleMesaRow';
 export default class MainTable extends Component {
   constructor(props) {
     super(props);
-    this.setState = this.selectedAction.bind(this);
-    this.selectedAction = this.selectedAction.bind(this);
+    this.changeStateSelected = this.changeStateSelected.bind(this);
   }
 
-  selectedAction(mesa, action) {
-    this.props.onSelectedAction(mesa, action);
+  changeStateSelected(mesa, action) {
+    this.props.onChangeStateSelected(mesa, action);
   }
 
   render() {
@@ -27,7 +27,7 @@ export default class MainTable extends Component {
       return (<SingleMesaRow 
               mesa={mesaModel} 
               key={mesa.id}
-              onSelectedAction={this.selectedAction}
+              onChangeStateSelected={this.changeStateSelected}
             />);
     });
 
@@ -49,3 +49,8 @@ export default class MainTable extends Component {
     );
   }
 }
+
+MainTable.propTypes = {
+  onChangeStateSelected: PropTypes.func,
+  mesas: PropTypes.array
+};

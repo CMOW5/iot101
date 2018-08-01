@@ -15,7 +15,7 @@ export default class StateActions extends Component {
   handleSelectedAction(event) {
     const target = event.target;
     const action = target.name;
-    this.props.onSelectedAction(action);
+    this.props.onChangeStateSelected(action);
   }
 
   render() {

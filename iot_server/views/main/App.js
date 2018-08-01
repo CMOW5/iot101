@@ -19,7 +19,7 @@ class App extends Component {
       isFetching: true,
     }
     this.updateMesas = this.updateMesas.bind(this);
-    this.selectedAction = this.selectedAction.bind(this);
+    this.changeStateSelected = this.changeStateSelected.bind(this);
     this.loadMesas = this.loadMesas.bind(this);
   }
 
@@ -27,9 +27,11 @@ class App extends Component {
    * the component mounted successfully
    */
   componentDidMount() {
-    socketHandler.socket.on('state_change', (newState) => {
-      console.log('new state = ', newState.value);
-      this.updateMesas(newState.value);
+    socketHandler.socket.on('state_change', (mesaData) => {
+      const {mesaId, newState} = mesaData;
+      console.log('mesa id = ', mesaId); 
+      console.log('new state = ', newState);
+      this.updateMesas(mesaId, newState);
     });
     this.loadMesas();
   }
@@ -44,9 +46,9 @@ class App extends Component {
     });
   }
 
-  updateMesas(newState) {
+  updateMesas(mesaId, newState) {
     const newMesas = this.state.mesas.map((mesa) => {
-      if (mesa.id === 1) {
+      if (mesa.id === mesaId) {
         mesa.state = newState;
       }
       return mesa;
@@ -56,10 +58,16 @@ class App extends Component {
     });
   }
 
-  selectedAction(mesa, action) {
+  changeStateSelected(mesa, action) {
+    console.log('selected mesa = ', mesa.id);
     console.log('selected action = ', action);
-    socketHandler.sendNotification('state_change', action);
-    this.updateMesas(action);
+    const mesaData = {
+      mesaId: mesa.id,
+      newState: action,
+    }
+
+    socketHandler.sendNotification('state_change', mesaData);
+    this.updateMesas(mesa.id, action);
   }
 
   render() {
@@ -69,7 +77,7 @@ class App extends Component {
           this.state.isFetching ? 
             <Loading show={true} title="" />
             : 
-            <MainTable onSelectedAction={this.selectedAction} mesas={this.state.mesas} />
+            <MainTable onChangeStateSelected={this.changeStateSelected} mesas={this.state.mesas} />
         }
       </div>
     );
