@@ -6,11 +6,6 @@ const mqttClient = mqttService.client;
 
 /* repositories */
 const Mesa = require('../../models/mesa');
-const MesaHistorial = require('../../models/mesas-historial');
-
-/* utils */
-const moment = require('moment');
-
 
 /* mqtt configuration */
 module.exports = (app) => {
@@ -36,30 +31,13 @@ module.exports = (app) => {
 
       const newState = message.toString();
 
-      Mesa.findById(mesaId)
-        .then((mesa) => {
-          let end = mesa.updatedAt;
-          let now = moment();
-          let duration = moment.duration(now.diff(end));
-          let hours = duration.asHours();
-          const fromState = mesa.state;
-
-          mesa.state = newState;
-
-          return Promise.all([
-            MesaHistorial.create({
-              mesaId: mesa.id,
-              from: fromState,
-              to: newState,
-              timeDiff: hours,
-            }),
-            mesa.save(),
-          ]);
-        }).then((mesaHistorial) => {
+      Mesa.updateMesaState(mesaId, newState)
+        .then((mesaHistorial) => {
           socketService.sendStateChange(mesaId, newState);
-
-          // socketService.sendNotification('state_change', {value: newState});
-          console.log('mesa updated');
+          console.log('mesa successfully updated');
+        })
+        .catch((error) => {
+          console.log('error updating mesa', error);
         });
     }
 
@@ -83,29 +61,13 @@ module.exports = (app) => {
   /* sockets messages handlers */
   socketService.addListener('state_change', function({mesaId, newState}) {
     console.log('new state from socket: ', mesaId, newState);
-
-    // save the new state in the db
-    Mesa.findById(mesaId)
-      .then((mesa) => {
-        let end = mesa.updatedAt;
-        let now = moment();
-        let duration = moment.duration(now.diff(end));
-        let hours = duration.asHours();
-        const fromState = mesa.state;
-
-        mesa.state = newState;
-
-        return Promise.all([
-          MesaHistorial.create({
-            mesaId: mesa.id,
-            from: fromState,
-            to: newState,
-            timeDiff: hours}),
-          mesa.save(),
-        ]);
-      }).then((mesaHistorial) => {
+    Mesa.updateMesaState(mesaId, newState)
+      .then((mesaHistorial) => {
         mqttService.changeMesaState(mesaId, newState);
-        console.log('mesa updated');
+        console.log('mesa successfully updated');
+      })
+      .catch((error) => {
+        console.log('error updating mesa', error);
       });
   });
 };
