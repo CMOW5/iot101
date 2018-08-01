@@ -5,38 +5,37 @@ const mqttService = require('./mqtt-service');
 const mqttClient = mqttService.client;
 
 /* repositories */
-var Mesa = require('../../models/mesa');
-var MesaHistorial = require('../../models/mesas-historial'); 
-var moment = require('moment');
+const Mesa = require('../../models/mesa');
+const MesaHistorial = require('../../models/mesas-historial');
+
+/* utils */
+const moment = require('moment');
 
 
-/* mqtt configuration */ 
+/* mqtt configuration */
 module.exports = (app) => {
-
   /* mqtt init */
-  mqttClient.on('connect', function () {
-    mqttClient.subscribe(mqttService.MQTT_FEED_CAMBIAR_ESTADO);
-    mqttClient.subscribe(mqttService.MQTT_FEED_CARGAR_DATOS);
-  });  
+  mqttClient.on('connect', function() {
+    // connect to the database and read the ids of the mesas
+    // to establish the mqtt topics
+    Mesa.findAll().then((mesas) => {
+      mesas.forEach((mesa) => {
+        mqttService.subscribeToMesa(mesa.id);
+      });
+    });
+  });
 
   /* mqtt messages handlers */
-  mqttClient.on('message', function (topic, message) {
-    console.log(topic);
-    console.log(message.toString());
-    
-    if (topic === mqttService.MQTT_FEED_CAMBIAR_ESTADO) {
-      const mesaId = 1; // find the mesa id here
+  mqttClient.on('message', function(topic, message) {
+    console.log('topic = ', topic);
+    console.log('message = ', message.toString());
+
+    if (mqttService.isStateChangeTopic(topic)) {
+      const mesaId = mqttService.getMesaIdFromTopic(topic);
+      console.log('mesa to update = ', mesaId);
+
       const newState = message.toString();
-      /*
-      mesa.state = newState;
-      return mesa.save();
-      .then(() => {
-        // notify the front end that the mesa x has a new state y 
-        socketService.sendNotification('state_change', {value: newState});
-        console.log('mesa updated');
-      });
-      */
-      
+
       Mesa.findById(mesaId)
         .then((mesa) => {
           let end = mesa.updatedAt;
@@ -44,89 +43,69 @@ module.exports = (app) => {
           let duration = moment.duration(now.diff(end));
           let hours = duration.asHours();
           const fromState = mesa.state;
-          
+
           mesa.state = newState;
 
           return Promise.all([
-            MesaHistorial.create({mesaId: mesa.id, from: fromState, to: newState, timeDiff: hours}),
-            mesa.save()
+            MesaHistorial.create({
+              mesaId: mesa.id,
+              from: fromState,
+              to: newState,
+              timeDiff: hours,
+            }),
+            mesa.save(),
           ]);
         }).then((mesaHistorial) => {
-          socketService.sendNotification('state_change', {value: newState});
+          socketService.sendStateChange(mesaId, newState);
+
+          // socketService.sendNotification('state_change', {value: newState});
           console.log('mesa updated');
         });
-
-
-      // save the new state in the db
-      /*
-      Mesa.findById(mesaId)
-          .then((mesa) => {    
-            mesa.state = newState;
-            return mesa.save();
-      })
-      .then(() => {
-        // notify the front end that the mesa x has a new state y 
-        socketService.sendNotification('state_change', {value: newState});
-        console.log('mesa updated');
-      });
-      */
     }
 
-    if (topic === mqttService.MQTT_FEED_CARGAR_DATOS) {
+    if (mqttService.isLoadDataTopic(topic)) {
       console.log('cargar datos desde el servidor');
-      const mesaId = 1; // find the mesa id here
+      const mesaId = mqttService.getMesaIdFromTopic(topic);
+
       Mesa.findById(mesaId).then((mesa) => {
         const newState = mesa.state;
         console.log('estado a enviar = ', newState);
-        mqttService.publish(mqttService.MQTT_ENVIAR_ESTADO, newState);
+        mqttService.changeMesaState(mesaId, newState);
       });
     }
   });
 
   /* sockets messages handlers */
-  socketService.addListener('chat message', function(msg) {
+  socketService.addListener('test channel', function(msg) {
     console.log('message executed: ' + msg);
-    mqttService.publish(mqttService.MQTT_ENVIAR_ESTADO, msg);
   });
 
   /* sockets messages handlers */
-  socketService.addListener('state_change', function(newState) {
-    console.log('message executed: ' + newState);
-    const mesaId = 1; // find the mesa id here
+  socketService.addListener('state_change', function({mesaId, newState}) {
+    console.log('new state from socket: ', mesaId, newState);
+
     // save the new state in the db
     Mesa.findById(mesaId)
-    .then((mesa) => {
-      let end = mesa.updatedAt;
-      let now = moment();
-      let duration = moment.duration(now.diff(end));
-      let hours = duration.asHours();
-      const fromState = mesa.state;
-      
-      mesa.state = newState;
+      .then((mesa) => {
+        let end = mesa.updatedAt;
+        let now = moment();
+        let duration = moment.duration(now.diff(end));
+        let hours = duration.asHours();
+        const fromState = mesa.state;
 
-      return Promise.all([
-        MesaHistorial.create({mesaId: mesa.id, from: fromState, to: newState, timeDiff: hours}),
-        mesa.save()
-      ]);
-    }).then((mesaHistorial) => {
-      mqttService.publish(mqttService.MQTT_ENVIAR_ESTADO, newState);
-      console.log('mesa updated');
-    });
-  });
+        mesa.state = newState;
 
-  /*
-  socketService.addListener('state_change', function(newState) {
-    console.log('message executed: ' + newState);
-    const mesaId = 1; // find the mesa id here
-    // save the new state in the db
-    Mesa.findById(mesaId).then((mesa) => {
-      mesa.state = newState;
-      return mesa.save();
-    })
-    .then(() => {
-      // notify the WEMOS the new state
-      mqttService.publish(mqttService.MQTT_ENVIAR_ESTADO, newState);
-    });
+        return Promise.all([
+          MesaHistorial.create({
+            mesaId: mesa.id,
+            from: fromState,
+            to: newState,
+            timeDiff: hours}),
+          mesa.save(),
+        ]);
+      }).then((mesaHistorial) => {
+        mqttService.changeMesaState(mesaId, newState);
+        console.log('mesa updated');
+      });
   });
-  */
-}
+};
