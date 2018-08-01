@@ -1,17 +1,17 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
 const registerMiddlewares = require('./config/middlewares');
 
 /* mqtt config */
 const mqttConfig = require('./services/mqtt/mqtt-config');
 
 /* routes */
-var indexRouter = require('./routes/index');
-var mesaRouter = require('./routes/mesa');
-var testRouter = require('./routes/test');
+const indexRouter = require('./routes/index');
+const mesaRouter = require('./routes/mesa');
+const testRouter = require('./routes/test');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
