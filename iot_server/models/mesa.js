@@ -1,5 +1,5 @@
-var dbconnection = require('../database/connection');
-var DataTypes = dbconnection.DataTypes;
+const dbconnection = require('../database/connection');
+const DataTypes = dbconnection.DataTypes;
 
 const MesaHistorial = require('./mesas-historial');
 
@@ -14,17 +14,17 @@ const Mesa = dbconnection.define('mesa', {
   },
   state: {
     type: DataTypes.ENUM(
-      'disponible', 
-      'solicitando_servicio', 
-      'pedido_tomado', 
+      'disponible',
+      'solicitando_servicio',
+      'pedido_tomado',
       'no_disponible',
-      'atendido', 
-      'alarma')
+      'atendido',
+      'alarma'),
   },
   // define the table's name
   // tableName: 'mesas',
-  
-},{
+
+}, {
   timestamps: true,
 });
 
