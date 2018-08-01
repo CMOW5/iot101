@@ -39,9 +39,6 @@ const MesaHistorial = dbconnection.define('mesaHistorial', {
     type: DataTypes.DOUBLE,
     allowNull: true,
   },
-  // define the table's name
-  // tableName: 'mesas',
-
 }, {
   timestamps: false,
   tableName: 'mesasHistorial',
