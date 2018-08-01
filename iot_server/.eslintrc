@@ -25,6 +25,6 @@
   ],
   "rules" : {
     "indent": ["error", 2],
-    "new-cap": ["off"],
+    "new-cap": ["off"]
   }
 }

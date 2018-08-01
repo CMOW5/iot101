@@ -5,7 +5,7 @@ import isString from 'lodash/isString';
 
 /**
  * this helper class provides methods to get the
- * urls related to the mesas 
+ * urls related to the mesas
  */
 export default class MesasUrls extends BaseUrls {
   /**

@@ -1,12 +1,18 @@
 import State from '../state';
-import Mesa from '../../mesa';
 
+/**
+ * an solicitando servicio state
+ */
 export default class SolicitandoServicioState extends State {
+  /**
+   * create a new instance
+   * @param {*} mesa
+   */
   constructor(mesa) {
     super();
     this.mesa = mesa;
     this.name = 'solicitando servicio';
-    this.action = 'solicitando_servicio'; // the key action to change to this state
+    this.action = 'solicitando_servicio';
     this.color = 'blue';
   }
 }

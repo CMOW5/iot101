@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 import './loading.css';
 
@@ -25,4 +26,10 @@ export default class Loading extends Component {
     );
   }
 }
+
+Loading.propTypes = {
+  show: PropTypes.bool,
+  size: PropTypes.string,
+  title: PropTypes.string,
+};
 

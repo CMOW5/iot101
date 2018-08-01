@@ -1,7 +1,13 @@
 import State from '../state';
-import Mesa from '../../mesa';
 
+/**
+ * an pedido tomado state
+ */
 export default class PedidoTomadoState extends State {
+  /**
+   * create a new instance
+   * @param {*} mesa
+   */
   constructor(mesa) {
     super();
     this.mesa = mesa;

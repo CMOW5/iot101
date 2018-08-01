@@ -1,8 +1,14 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
-/* state actions */
-
+/**
+ * a dropdown component with the state action to select
+ */
 export default class StateActions extends Component {
+  /**
+   * create a new instance
+   * @param {object} props
+   */
   constructor(props) {
     super(props);
     this.handleSelectedAction = this.handleSelectedAction.bind(this);
@@ -18,14 +24,17 @@ export default class StateActions extends Component {
     this.props.onChangeStateSelected(action);
   }
 
+  /**
+   * @return {ReactNode}
+   */
   render() {
     return (
       <div className="dropdown is-hoverable">
         <div className="dropdown-trigger">
-          <button 
-            onClick={this.toggleDropdown} 
-            className="button" 
-            aria-haspopup="true" 
+          <button
+            onClick={this.toggleDropdown}
+            className="button"
+            aria-haspopup="true"
             aria-controls="dropdown-menu">
             <span>acciones</span>
             <span className="icon is-small">
@@ -35,26 +44,26 @@ export default class StateActions extends Component {
         </div>
         <div className="dropdown-menu" id="dropdown-menu" role="menu">
           <div className="dropdown-content">
-            <a 
+            <a
               onClick={this.handleSelectedAction}
               name = "disponible"
               className="dropdown-item">
               disponible
             </a>
-            <a 
+            <a
               onClick={this.handleSelectedAction}
               name = "pedido_tomado"
               className="dropdown-item">
               pedido tomado
             </a>
-            <a 
+            <a
               onClick={this.handleSelectedAction}
               name = "atendido"
               className="dropdown-item">
               atendido
             </a>
             <hr className="dropdown-divider" />
-            <a 
+            <a
               onClick={this.handleSelectedAction}
               name = "alarma"
               className="dropdown-item">
@@ -66,3 +75,7 @@ export default class StateActions extends Component {
     );
   }
 }
+
+StateActions.propTypes = {
+  onChangeStateSelected: PropTypes.func,
+};

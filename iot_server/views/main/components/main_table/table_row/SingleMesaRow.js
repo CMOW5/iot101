@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 /* styles */
 import './mesa-row.css';
@@ -80,3 +81,8 @@ export default class SingleMesaRow extends Component {
     );
   }
 }
+
+SingleMesaRow.propTypes = {
+  onChangeStateSelected: PropTypes.func,
+  mesa: PropTypes.object,
+};
