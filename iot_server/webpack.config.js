@@ -29,57 +29,63 @@ module.exports = {
 };
 */
 
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-var nodeExternals = require('webpack-node-externals');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
-var config = {
+const config = {
   // common configuration
   module: {
     rules: [
       {
+        enforce: 'pre',
         test: /\.js$/,
         exclude: /node_modules/,
-        use: ["babel-loader"]
+        loader: 'eslint-loader',
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
-      }
-    ]
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
-}
+};
 
-var serverConfig = Object.assign({}, config, {
-  name: "server",
-  entry: "./bin/www",
+let serverConfig = Object.assign({}, config, {
+  name: 'server',
+  entry: './bin/www',
   output: {
-    path: path.join(__dirname, "/build"),
-    filename: "server-bundle.js"
+    path: path.join(__dirname, '/build'),
+    filename: 'server-bundle.js',
   },
   target: 'node',
   node: {
-      // fs: 'empty',
-    __dirname: true
+    // fs: 'empty',
+    __dirname: true,
   },
-  externals: [nodeExternals()], // in order to ignore all modules in node_modules folder 
+  externals: [nodeExternals()], // ignore all modules in node_modules folder
 });
 
-var frontEndConfig = Object.assign({}, config, {
-  name: "frontEnd",
-  entry: ['babel-polyfill', "./views/main/index.js"],
+let frontEndConfig = Object.assign({}, config, {
+  name: 'frontEnd',
+  entry: ['babel-polyfill', './views/main/index.js'],
   output: {
-    path: path.join(__dirname, "/build"),
-    filename: "index-bundle.js"
+    path: path.join(__dirname, '/build'),
+    filename: 'index-bundle.js',
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./views/main/index.html"
-    })
-  ]
+      template: './views/main/index.html',
+    }),
+  ],
 });
 
 // Return Array of Configurations
 module.exports = [
-  serverConfig, frontEndConfig,    	
+  serverConfig, frontEndConfig,
 ];
