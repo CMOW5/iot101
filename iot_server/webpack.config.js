@@ -58,7 +58,7 @@ const config = {
 
 let serverConfig = Object.assign({}, config, {
   name: 'server',
-  entry: './bin/www',
+  entry: ['babel-polyfill', './bin/www'],
   output: {
     path: path.join(__dirname, '/build'),
     filename: 'server-bundle.js',
