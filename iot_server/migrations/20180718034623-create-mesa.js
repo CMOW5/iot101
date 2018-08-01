@@ -6,28 +6,28 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       state: {
         type: Sequelize.ENUM(
-          'disponible', 
-          'solicitando_servicio', 
-          'pedido_tomado', 
+          'disponible',
+          'solicitando_servicio',
+          'pedido_tomado',
           'no_disponible',
-          'atendido', 
-          'alarma')
+          'atendido',
+          'alarma'),
       },
       createdAt: {
         allowNull: true,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: true,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('mesas');
-  }
+  },
 };

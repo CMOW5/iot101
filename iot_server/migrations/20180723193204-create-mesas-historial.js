@@ -6,51 +6,41 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       mesaId: {
         type: Sequelize.INTEGER,
         references: {
-          model: "mesas",
-          key: "id"
-        }
+          model: 'mesas',
+          key: 'id',
+        },
       },
       from: {
         type: Sequelize.ENUM(
-          'disponible', 
-          'solicitando_servicio', 
-          'pedido_tomado', 
+          'disponible',
+          'solicitando_servicio',
+          'pedido_tomado',
           'no_disponible',
-          'atendido', 
-          'alarma')
+          'atendido',
+          'alarma'),
       },
       to: {
         type: Sequelize.ENUM(
-          'disponible', 
-          'solicitando_servicio', 
-          'pedido_tomado', 
+          'disponible',
+          'solicitando_servicio',
+          'pedido_tomado',
           'no_disponible',
-          'atendido', 
-          'alarma')
+          'atendido',
+          'alarma'),
       },
       timeDiff: {
         type: Sequelize.DOUBLE,
         // type: Sequelize.DATE,
         allowNull: true,
       },
-      /*
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
-      */
     });
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable('MesasHistorial');
-  }
+  },
 };
