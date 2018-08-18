@@ -1,10 +1,9 @@
 let mqtt = require('mqtt');
+const mqttConfig = require('../../config/mqtt.js');
 
-let mqttService = {
-  MQTT_SERVER: '192.168.0.13',
-};
+let mqttService = {};
 
-let client = mqtt.connect('mqtt://' + mqttService.MQTT_SERVER);
+let client = mqtt.connect('mqtt://' + mqttConfig.MQTT_SERVER);
 
 mqttService.client = client;
 
