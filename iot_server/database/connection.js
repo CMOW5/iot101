@@ -1,11 +1,11 @@
 const Sequelize = require('sequelize');
+const dbconfig = require('../config/database.js');
 
 const dbconnection = new Sequelize('allix_iot_restaurante', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
-  port: 3306,
+  host: dbconfig.development.host,
+  dialect: dbconfig.development.dialect,
+  port: dbconfig.development.port,
   operatorsAliases: false,
-
   pool: {
     max: 5,
     min: 0,
