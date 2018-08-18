@@ -104,25 +104,25 @@ void App::setState(State *newState) {
 		pins->D3.turnOn();
 	}
 	else if (state == disponibleState) {
-		pins->D1.turnOn();
-		pins->D2.turnOff();
-		pins->D3.turnOff();
-	} else if (state == solicitandoServicioState) {
-		pins->D3.turnOn();
 		pins->D1.turnOff();
-		pins->D2.turnOff();
+		pins->D2.turnOn();
+		pins->D3.turnOn();
+	} else if (state == solicitandoServicioState) {
+		pins->D3.turnOff();
+		pins->D1.turnOn();
+		pins->D2.turnOn();
 	} else if (state == pedidoTomadoState) {
 		pins->D2.intermitent();
-		pins->D1.turnOff();
-		pins->D3.turnOff();
+		pins->D1.turnOn();
+		pins->D3.turnOn();
 	} else if (state == atendidoState) {
-		pins->D2.turnOn();
-		pins->D1.turnOff();
-		pins->D3.turnOff();
-	} else if (state == alarmaState) {
-		pins->D1.intermitent(); 
 		pins->D2.turnOff();
-		pins->D3.turnOff();
+		pins->D1.turnOn();
+		pins->D3.turnOn();
+	} else if (state == alarmaState) {
+		pins->D1.intermitent();
+		pins->D2.turnOn();
+		pins->D3.turnOn();
 	}
 }
 
