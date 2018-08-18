@@ -47,11 +47,9 @@ class App extends Component {
    * fetch all the mesas from db
    */
   async loadMesas() {
-    const mesa = await mesasRequest.fetchMesas();
+    const mesas = await mesasRequest.fetchMesas();
     this.setState({
-      mesas: [
-        {id: mesa.id, state: mesa.state},
-      ],
+      mesas: mesas,
       isFetching: false,
     });
   }
