@@ -21,6 +21,7 @@
     "mysql2": "^1.6.1",
     "sequelize": "^4.38.0",
     "sequelize-cli": "^4.1.1",
+    "serialport": "^6.2.2",
     "socket.io": "^2.1.1"
   },
   "devDependencies": {
