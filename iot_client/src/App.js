@@ -12,10 +12,15 @@ import socketHandler from './services/socket/socket-handler';
 // pages 
 import MainTable from './pages/main_table/MainTable';
 import SettingsPage from './pages/settings/SettingsPage';
+import RegisterTablePage from './pages/register_table/RegisterTablePage';
 import NoMatchPage from './pages/no_match_page/NoMatchPage';
 
 // components 
+import NavBar from './components/navbar/NavBar';
 import Loading from './components/utils/loading/Loading';
+
+// styles
+import './App.css';
 
 // const socketHandler = require('./services/socket/socket-handler');
 /**
@@ -101,11 +106,17 @@ class App extends Component {
    */
   render() {
     return (
-      <Switch>
-        <Route exact path="/" component={MainTable}/>
-        <Route path="/about" component={SettingsPage}/>
-        <Route component={NoMatchPage}/>
-      </Switch>
+      <div className="App">
+        <NavBar />
+        <div className="container">
+          <Switch>
+            <Route exact path="/" component={MainTable}/>
+            <Route path="/settings" component={SettingsPage}/>
+            <Route path="/registertable" component={RegisterTablePage}/>
+            <Route component={NoMatchPage}/>
+          </Switch>
+        </div>
+      </div>
     );
   }
 }
