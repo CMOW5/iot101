@@ -7,7 +7,7 @@ WifiHandler::WifiHandler() {
 
 void WifiHandler::connect()
 {
-	WiFi.begin(systemConfig->WIFI_SSID, systemConfig->WIFI_PASS);
+	WiFi.begin(systemConfig->wifiNetwork().c_str(), systemConfig->wifiPassword().c_str());
   while (WiFi.status() != WL_CONNECTED) {
      delay(500);
      Serial.print(".");
