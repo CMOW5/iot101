@@ -9,6 +9,7 @@ import { BrowserRouter } from 'react-router-dom'
 
 // styles
 import 'bulma/css/bulma.css';
+import "@fortawesome/fontawesome-free/css/all.css"
 
 ReactDOM.render(
   <BrowserRouter>
