@@ -19,4 +19,9 @@ router.get('/', function(req, res, next) {
   */
 });
 
+/* GET home page. */
+router.post('/register', function(req, res, next) {
+  res.json({ request: req.body });
+});
+
 module.exports = router;
