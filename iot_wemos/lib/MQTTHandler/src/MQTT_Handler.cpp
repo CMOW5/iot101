@@ -8,11 +8,12 @@ MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
 
   mqtt = new Adafruit_MQTT_Client(
     &(wifihandler.client),
-    systemConfig->MQTT_SERVER,
-    systemConfig->MQTT_SERVERPORT,
-    systemConfig->MQTT_USERNAME,
-    systemConfig->MQTT_USERNAME,
-    systemConfig->MQTT_KEY);
+    systemConfig->mqttServerIp().c_str(),
+    // atoi(systemConfig->mqttPort().c_str()),
+    1883,
+    systemConfig->mqttUsername().c_str(),
+    systemConfig->mqttUsername().c_str(),
+    systemConfig->mqttKey().c_str());
 
   cargarDatosFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_CARGAR_DATOS);
   estadoFeed = new Adafruit_MQTT_Publish(mqtt, MQTT_FEED_CAMBIAR_ESTADO);
