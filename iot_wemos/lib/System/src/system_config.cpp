@@ -13,7 +13,7 @@ bool SystemConfig::writeConfigurationData(String jsonConfigurationData) {
   // check the json configuration data
   StaticJsonBuffer<512> jsonBuffer;
   JsonObject& root = jsonBuffer.parseObject(jsonConfigurationData.c_str());
-
+  
   // Test if parsing succeeds.
   if (!root.success()) {
     Serial.println("parseObject() failed");
@@ -96,14 +96,12 @@ String SystemConfig::mesaNumber() {
 
 String SystemConfig::toString(void) {
   String output = "";
-  output += "wifi network = " + String(this->wifiNetwork());
-/*
-  output += "wifi pass = " + this->wifiPassword();
-  output += "mqtt server ip pass = " + this->mqttServerIp();
-  output += "mqtt port = " + this->mqttPort();
-  output += "mqtt username = " + this->mqttUsername();
-  output += "mqtt key = " + this->mqttKey();
-  output += "mesa number = " + this->mesaNumber();
-  */
+  output += "wifi network = " + String(this->wifiNetwork()) + "\n";
+  output += "wifi pass = " + this->wifiPassword() + "\n";
+  output += "mqtt server ip pass = " + this->mqttServerIp() + "\n";
+  output += "mqtt port = " + this->mqttPort() + "\n";
+  output += "mqtt username = " + this->mqttUsername() + "\n";
+  output += "mqtt key = " + this->mqttKey() + "\n";
+  output += "mesa number = " + this->mesaNumber() + "\n";
   return output;
 }

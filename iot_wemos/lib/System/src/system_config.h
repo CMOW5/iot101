@@ -33,15 +33,7 @@ class SystemConfig {
     String mqttKey(void);
     String mesaNumber(void);
     String toString(void);
-
-    /*
-    //mqtt
-    const char* MQTT_SERVER = "192.168.0.13";
-    int MQTT_SERVERPORT = 1883;
-    const char* MQTT_USERNAME = "";
-    const char* MQTT_KEY = "";
-    */
-
+    
   private:
     EEPROMHandler eepromHandler;
     static SystemConfig* pInstance;
