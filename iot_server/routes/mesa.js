@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const serialPortService = require('../services/serial/serial_port');
 
 /* repositories */
 const Mesa = require('../models/mesa');
@@ -19,9 +20,16 @@ router.get('/', function(req, res, next) {
   */
 });
 
-/* GET home page. */
+/* register a new mesa */
 router.post('/register', function(req, res, next) {
-  res.json({ request: req.body });
+  const mesaData = req.body;
+  serialPortService.writeRegistrationData(mesaData).then(function (data) {
+    console.log('done');
+    res.json({message: data});
+  }).catch(function(err) {
+    console.log('error = ', err);
+    res.json({error: err});
+  });
 });
 
 module.exports = router;
