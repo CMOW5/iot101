@@ -10,9 +10,9 @@ void WifiHandler::connect()
 	WiFi.begin(systemConfig->wifiNetwork().c_str(), systemConfig->wifiPassword().c_str());
   while (WiFi.status() != WL_CONNECTED) {
      delay(500);
-     Serial.print(".");
+     SerialHandler::println(".");
   }
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  SerialHandler::println("WiFi connected");
+  SerialHandler::println("IP address: ");
+  SerialHandler::println(WiFi.localIP());
 }

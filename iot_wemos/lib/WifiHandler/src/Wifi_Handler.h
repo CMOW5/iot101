@@ -3,9 +3,7 @@
 
 #include <ESP8266WiFi.h>
 #include "system_config.h"
-
-#define SSID "TEC4825"
-#define SSPASSWORD "91121608540"
+#include "SerialHandler.h"
 
 class WifiHandler
 {
