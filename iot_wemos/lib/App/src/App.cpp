@@ -1,8 +1,7 @@
 #include "App.h"
 #include "../../Events/src/IOEvents.h"
 #include "../../Events/src/MQTTEvents.h"
-
-// App::App() : mqttHandler(wifiHandler) {}
+#include "../../SerialHandler/src/SerialHandler.h"
 
 App::App(
 	Pins* pins, MQTTHandler* mqHandler, WifiHandler* wHandler,
@@ -27,9 +26,6 @@ App::App(
   pedidoTomadoState = new PedidoTomadoState(this);
 	atendidoState = new AtendidoState(this);
 	alarmaState = new AlarmaState(this);
-
-	// setState(bootState);
-	// setState(disponibleState);
 }
 
 App::~App() {
@@ -41,11 +37,11 @@ void App::update(Subject* theChangedSubject) {
 
 	if (theChangedSubject == _mqttSubject) { // mqtt event
 		// print something
-		Serial.println("event desde socket subject!!!");
-		Serial.println("data = ");
-		Serial.println(_mqttSubject->getData());
-		Serial.println("channel = ");
-		Serial.println(_mqttSubject->channel);
+		SerialHandler::println("event desde socket subject!!!");
+		SerialHandler::println("data = ");
+		SerialHandler::println(_mqttSubject->getData());
+		SerialHandler::println("channel = ");
+		SerialHandler::println(_mqttSubject->channel);
 
 		char* newState = _mqttSubject->getData();
 		setState(newState);
@@ -53,10 +49,10 @@ void App::update(Subject* theChangedSubject) {
 	}
 
 	if (theChangedSubject == _ioSubject) {  // io pin event
-		Serial.println("event desde io pins");
+		SerialHandler::println("event desde io pins");
 		int t_pin = _ioSubject->getPin();
-		Serial.println("pin = ");
-		Serial.println(t_pin);
+		SerialHandler::println("pin = ");
+		SerialHandler::println(t_pin);
 		if (t_pin == 14) {
 			solicitarServicio();
 		} else if (t_pin == 12) {
@@ -68,22 +64,27 @@ void App::update(Subject* theChangedSubject) {
 // Initialize the aplication modules
 void App::initialize()
 {
-  // initialize something
   // SYS_Initialize(); //initialize the system
-	Serial.begin(9600);
-	delay(1000);
-
+	// Serial.begin(9600);
+	// delay(1000);
 	wifiHandler->connect();
 	mqttHandler->initialize();
 	mqttHandler->connect();
 	setState(bootState);
 
-  Serial.print("App initialized");
+  SerialHandler::println("App initialized");
+}
+
+// the program main state machine
+void App::tasks()
+{
+	mqttHandler->connect(); // keep the mqtt connection alive
+	mqttHandler->processSubscriptions(); // keep watching for mqqt subcriptions events
 }
 
 // actions
 void App::cargarDatos(void) {
-	Serial.println("obteniendo datos iniciales desde el servidor");
+	SerialHandler::println("obteniendo datos iniciales desde el servidor");
 	mqttHandler->cargarDatos();
 }
 
@@ -128,8 +129,8 @@ void App::setState(State *newState) {
 
 void App::setState(char* newStateName) {
   // state = newState;
-	Serial.println("new state name = ");
-	Serial.println(newStateName);
+	SerialHandler::println("new state name = ");
+	SerialHandler::println(newStateName);
 	if (strcmp(newStateName, "disponible") == 0) {
 		setState(disponibleState);
 	} else if (strcmp(newStateName, "solicitando_servicio") == 0) {
@@ -141,13 +142,6 @@ void App::setState(char* newStateName) {
 	} else if (strcmp(newStateName, "alarma") == 0) {
 		setState(alarmaState);
 	}
-}
-
-// the program main state machine
-void App::tasks()
-{
-	mqttHandler->connect(); // keep the mqtt connection alive
-	mqttHandler->processSubscriptions(); // keep watching for mqqt subcriptions events
 }
 
 /* state getters */
