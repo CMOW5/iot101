@@ -1,15 +1,37 @@
 const config = require('../../config/serial.js');
-
 var SerialPort = require('serialport');
+
+const DATA_END_LINE = "\0";
 
 var serialPort = {
   port: null,
+
+  writeRegistrationData: function(data) {
+    return new Promise(async (resolve, reject) => {
+      const wemosPort = await this.getMicrocontrollerPort();    
+      console.log('wemos port = ', wemosPort);
+      await this.openPort(wemosPort);
+      await this.flush();
+      
+      // register the read callback to receive the confirmation from the uC
+      this.port.on('data', async (data) => {
+        console.log('data Data:', data);
+        await this.port.close();
+        if (data == '1') {
+          resolve('module configured');
+        } else {
+          reject('module not configured');
+        }
+      });
+      await this.write(this.buildData(data));
+    });
+  },
 
   getMicrocontrollerPort: function() {
     return new Promise(async function(resolve, reject) {
       const availablePorts = await SerialPort.list();
       const wemosPorts = availablePorts.filter(function(currentPort) {
-        return currentPort.vendorId == WEMOS_VENDOR_ID;
+        return currentPort.vendorId == config.WEMOS_VENDOR_ID;
       });
 
       if (wemosPorts.length > 0) {
@@ -20,21 +42,8 @@ var serialPort = {
     });
   },
   
-  registerMesa: function(data) {
-    return new Promise(function(resolve, reject) {
-      const wemosPort = await this.getMicrocontrollerPort();
-      await this.openPort(wemosPort);
-      await this.flush();
-      this.port.on('data', function (data) {
-        console.log('data Data:', data);
-        resolve('port written' + data);
-      });
-      await this.write('mesa#;wifi-network;wifi-password;mqttserverip;mqttport;mqttusername;mqttkey\n');
-    });
-  },
-
   openPort: function(comName) {
-    return new Promise(async function(resolve, reject) {
+    return new Promise(async (resolve, reject) => {
       
       this.port = new SerialPort(comName, { 
         autoOpen: false, 
@@ -42,7 +51,7 @@ var serialPort = {
       }).setEncoding('ascii');
   
   
-      this.port.open(function (err) {
+      this.port.open((err) => {
           if (err) {
              console.log('Error opening port: ', err.message);
              reject(err);
@@ -57,8 +66,8 @@ var serialPort = {
   },
 
   flush: function() {
-    return new Promise(function (resolve, reject) {
-      this.port.flush(function flushDone(err) {
+    return new Promise((resolve, reject) => {
+      this.port.flush((err) => {
         if (err) {
           reject(err);
         } else {
@@ -69,8 +78,8 @@ var serialPort = {
   },
 
   write: function(writeValue) {
-    return new Promise(function(resolve, reject) {
-      this.port.write(writeValue, function(err) {
+    return new Promise((resolve, reject) => {
+      this.port.write(writeValue, (err) => {
           if (err) {
             reject(err);
           } else {
@@ -80,10 +89,15 @@ var serialPort = {
     });
   },
 
-  read: function (callback) {
+  read: function(callback) {
     port.on('data', function (data) {
       callback(data);
     });
+  },
+
+  buildData: function (data) {
+    console.log('stringifyed data = ', JSON.stringify(data));
+    return JSON.stringify(data) + DATA_END_LINE;
   }
 };
 
