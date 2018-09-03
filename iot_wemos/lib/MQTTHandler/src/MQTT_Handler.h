@@ -8,11 +8,7 @@
 
 // publishers
 // TODO: make cargar datos an http request, or unsubscribe
-#define MQTT_FEED_CARGAR_DATOS  "restaurante/mesa_1/datos"
-#define MQTT_FEED_CAMBIAR_ESTADO  "restaurante/mesa_1/estado"
-
-// subcriptions
-#define MQTT_SUB_ESTADO  "restaurante/mesa_1/server/estado"
+#define MQTT_BASE_TOPIC  "restaurante/mesa_"
 
 class MQTTEvents;
 
@@ -43,6 +39,11 @@ class MQTTHandler
     void connect(void);
     void processSubscriptions(void);
 
+    // mqtt topics channels
+    String feedCargarDatosTopic(void);
+    String feedStateChangeTopic(void);
+    String subStateChangeTopic(void);
+
     void cargarDatos(void);
     void solicitarServicio(void);
     void prenderAlarma(void);
@@ -51,6 +52,7 @@ class MQTTHandler
     static void mqttEvent(char *data, uint16_t len);
 
   private:
+    String baseTopic(void);
     SystemConfig* systemConfig;
 };
 
