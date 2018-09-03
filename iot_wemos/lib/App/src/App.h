@@ -31,7 +31,6 @@ class App: public Observer
     IOEvents* _ioSubject;
 
     //states
-    // AppStateMachine *appStateMachine;
     State *bootState;
     State *disponibleState;
     State *solicitandoServicioState;
