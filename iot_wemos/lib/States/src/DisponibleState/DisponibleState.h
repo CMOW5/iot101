@@ -2,10 +2,8 @@
 #define DISPONIBLE_STATE_H_
 
 #include "State.h"
-#include "AppStateMachine.h"
 #include "App.h"
 
-class AppStateMachine;
 class App;
 
 class DisponibleState: public State {

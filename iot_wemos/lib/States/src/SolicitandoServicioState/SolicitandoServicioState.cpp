@@ -5,7 +5,7 @@ SolicitandoServicioState::SolicitandoServicioState(App *app) {
 }
 
 void SolicitandoServicioState::solicitarServicio(void) {
-    Serial.println("solicitando servicio estando ya solicitando");
+    SerialHandler::println("solicitando servicio estando ya solicitando");
 }
 
 void SolicitandoServicioState::pedidoTomado(void) {

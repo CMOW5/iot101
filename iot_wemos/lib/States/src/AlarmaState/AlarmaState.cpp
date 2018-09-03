@@ -5,7 +5,7 @@ AlarmaState::AlarmaState(App *app) {
 }
 
 void AlarmaState::solicitarServicio(void) {
-  Serial.println("solicitando servicio estando en alarma");
+  SerialHandler::println("solicitando servicio estando en alarma");
   app->mqttHandler->solicitarServicio();
   app->setState(app->getSolicitandoServicioState());
 }

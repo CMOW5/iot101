@@ -5,7 +5,7 @@ PedidoTomadoState::PedidoTomadoState(App *app) {
 }
 
 void PedidoTomadoState::solicitarServicio(void) {
-  Serial.println("solicitando servicio estando pedido tomado");
+  SerialHandler::println("solicitando servicio estando pedido tomado");
   app->mqttHandler->solicitarServicio();
   app->setState(app->getSolicitandoServicioState());
 }

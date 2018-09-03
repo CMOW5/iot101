@@ -1,6 +1,8 @@
 #ifndef STATE_H_
 #define STATE_H_
 
+#include "SerialHandler.h"
+
 // Base class
 class State {
    public:
