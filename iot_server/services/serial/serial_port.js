@@ -95,6 +95,10 @@ var serialPort = {
     });
   },
 
+  verifyConnection: function() {
+    return this.getMicrocontrollerPort();
+  },
+
   buildData: function (data) {
     console.log('stringifyed data = ', JSON.stringify(data));
     return JSON.stringify(data) + DATA_END_LINE;
