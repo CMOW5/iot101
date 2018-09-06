@@ -5,6 +5,11 @@ import './App.css';
 // router
 import { Switch, Route } from 'react-router'
 
+// routes
+import BaseRoutes from './router/routes/base_routes';
+import SettingsRoutes from './router/routes/settings_routes';
+import MesasRoutes from './router/routes/mesas_routes';
+
 // services
 import mesasRequest from './services/api/mesas/mesas-request';
 import socketHandler from './services/socket/socket-handler';
@@ -110,9 +115,9 @@ class App extends Component {
         <NavBar />
         <div className="container">
           <Switch>
-            <Route exact path="/" component={MainTable}/>
-            <Route path="/settings" component={SettingsPage}/>
-            <Route path="/registertable" component={RegisterTablePage}/>
+            <Route exact path={BaseRoutes.base()} component={MainTable}/>
+            <Route path={SettingsRoutes.base()} component={SettingsPage}/>
+            <Route path={MesasRoutes.create()} component={RegisterTablePage}/>
             <Route component={NoMatchPage}/>
           </Switch>
         </div>
