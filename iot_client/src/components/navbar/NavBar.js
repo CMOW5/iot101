@@ -1,7 +1,31 @@
 import React, {Component} from 'react';
 
+// router
+import {withRouter} from 'react-router-dom';
+import RouterHandler from '../../router/router_handler';
+
+// routes
+import BaseRoutes from '../../router/routes/base_routes';
+import SettingsRoutes from '../../router/routes/settings_routes';
+import MesasRoutes from '../../router/routes/mesas_routes';
+
 class NavBar extends Component {
-  
+
+  goToMainTablePage = () => {
+    const route = BaseRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
+  }
+
+  goToSettings = () => {
+    const route = SettingsRoutes.base();
+    RouterHandler.goTo(this.props.history, route);
+  }
+
+  goToRegisterNewMesa = () => {
+    const route = MesasRoutes.create();
+    RouterHandler.goTo(this.props.history, route);
+  }
+
   render() {
     return (
       <nav className="navbar is-transparent">
@@ -18,35 +42,25 @@ class NavBar extends Component {
 
         <div id="navbarExampleTransparentExample" className="navbar-menu">
           <div className="navbar-start">
-            <a className="navbar-item" href="https://bulma.io/">
+            <a onClick = {this.goToMainTablePage} className="navbar-item">
               Home
             </a>
             <div className="navbar-item has-dropdown is-hoverable">
-              <a className="navbar-link" href="/documentation/overview/start/">
-                Docs
+              <a className="navbar-link">
+                Admin
               </a>
               <div className="navbar-dropdown is-boxed">
-                <a className="navbar-item" href="/documentation/overview/start/">
-                  Overview
+                <a 
+                  className="navbar-item"
+                  onClick = {this.goToSettings}
+                  >
+                  Ajustes
                 </a>
-                <a className="navbar-item" href="https://bulma.io/documentation/modifiers/syntax/">
-                  Modifiers
-                </a>
-                <a className="navbar-item" href="https://bulma.io/documentation/columns/basics/">
-                  Columns
-                </a>
-                <a className="navbar-item" href="https://bulma.io/documentation/layout/container/">
-                  Layout
-                </a>
-                <a className="navbar-item" href="https://bulma.io/documentation/form/general/">
-                  Form
-                </a>
-                <hr className="navbar-divider" />
-                <a className="navbar-item" href="https://bulma.io/documentation/elements/box/">
-                  Elements
-                </a>
-                <a className="navbar-item is-active" href="https://bulma.io/documentation/components/breadcrumb/">
-                  Components
+                <a 
+                  className="navbar-item"
+                  onClick = {this.goToRegisterNewMesa}
+                  >
+                  Crear mesa
                 </a>
               </div>
             </div>
@@ -82,4 +96,4 @@ class NavBar extends Component {
   }
 }
 
-export default NavBar;
+export default withRouter(NavBar);
