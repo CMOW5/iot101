@@ -15,6 +15,7 @@ export default class MesasUrls extends BaseUrls {
   static base() {
     return super.base() + '/mesas';
   }
+  
   /**
    * url to fetch products from db
    *
@@ -42,11 +43,11 @@ export default class MesasUrls extends BaseUrls {
   }
 
   /**
-   * url to fetch products from db
+   * url to create a new mesa
    * @return {string}
    */
   static create() {
-    return this.base() + '/admin/products';
+    return this.base();
   }
 
   /**
@@ -66,5 +67,14 @@ export default class MesasUrls extends BaseUrls {
    */
   static delete(id) {
     return this.base() + `/admin/products/${id}`;
+  }
+
+  /**
+   * url to validate a serial connection
+   * 
+   * @return {string}
+   */
+  static validateConnection() {
+    return this.base() + `/validateconnection`;
   }
 }
