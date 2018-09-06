@@ -9,6 +9,7 @@ const mqttConfig = require('./services/mqtt/mqtt-config');
 // routes 
 var indexRouter = require('./routes/index');
 var mesaRouter = require('./routes/mesa');
+var dbConfigRouter = require('./routes/dbconfig');
 
 var app = express();
 
@@ -20,6 +21,7 @@ registerMiddlewares(app);
 
 app.use('/', indexRouter);
 app.use('/api/mesas', mesaRouter);
+app.use('/api/config', dbConfigRouter);
 // app.use('/test', testRouter);
 
 // mqtt config 
