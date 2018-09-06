@@ -1,6 +1,5 @@
 #include "MQTT_Handler.h"
 #include "Client.h"
-#include "Utils.h"
 #include "SerialHandler.h"
 
 MQTTEvents MQTTHandler::mqttEvents;
@@ -8,10 +7,10 @@ MQTTEvents MQTTHandler::mqttEvents;
 MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
   systemConfig = SystemConfig::instance();
 
-  char* mqttServer = Utils::strTocc(systemConfig->mqttServerIp());
-  int mqttPort = atoi(systemConfig->mqttPort().c_str());
-  char* mqttUsername =  Utils::strTocc(systemConfig->mqttUsername());
-  char* mqttKey =  Utils::strTocc(systemConfig->mqttKey());
+  char* mqttServer = "192.168.0.13"; //Utils::strTocc(systemConfig->mqttServerIp());
+  int mqttPort = 1883; // atoi(systemConfig->mqttPort().c_str());
+  char* mqttUsername = "";// Utils::strTocc(systemConfig->mqttUsername());
+  char* mqttKey = ""; // Utils::strTocc(systemConfig->mqttKey());
 
   mqtt = new Adafruit_MQTT_Client(
     &(wifihandler.client),
@@ -21,15 +20,24 @@ MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
     mqttUsername,
     mqttKey);
 
+    /*
+    "restaurante/mesa_5/datos"
+    "restaurante/mesa_5/estado"
+    "restaurante/mesa_5/server/estado"
+    */
+
+
   // feeds topics
   cargarDatosFeed
-    = new Adafruit_MQTT_Publish(mqtt, Utils::strTocc(feedCargarDatosTopic()));
+    = new Adafruit_MQTT_Publish(mqtt, Utils::strTocc(feedCargarDatosTopic())
+    );
 
   estadoFeed
-    = new Adafruit_MQTT_Publish(mqtt, Utils::strTocc(feedStateChangeTopic()));
+    = new Adafruit_MQTT_Publish(mqtt, Utils::strTocc(feedStateChangeTopic())
+      );
 
   // subscriptions topics
-  estadoSub 
+  estadoSub
     = new Adafruit_MQTT_Subscribe(
         mqtt, Utils::strTocc(subStateChangeTopic()), MQTT_QOS_1
       );
@@ -100,14 +108,17 @@ String MQTTHandler::baseTopic() {
 }
 
 // mqtt topics channels
+// eg => restaurante/mesa_x/datos
 String MQTTHandler::feedCargarDatosTopic() {
   return baseTopic() + "datos";
 }
 
+// eg => restaurante/mesa_x/estado
 String MQTTHandler::feedStateChangeTopic() {
   return baseTopic() + "estado";
 }
 
+// eg => restaurante/mesa_x/server/estado
 String MQTTHandler::subStateChangeTopic() {
-  return baseTopic() + "/server/estado";
+  return baseTopic() + "server/estado";
 }

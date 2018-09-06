@@ -5,6 +5,7 @@
 #include "Adafruit_MQTT_Client.h"
 #include "../../WifiHandler/src/Wifi_Handler.h"
 #include "../../Events/src/MQTTEvents.h"
+#include "Utils.h"
 
 // publishers
 // TODO: make cargar datos an http request, or unsubscribe
