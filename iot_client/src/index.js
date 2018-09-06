@@ -12,7 +12,11 @@ import 'bulma/css/bulma.css';
 import "@fortawesome/fontawesome-free/css/all.css"
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter
+    // the forceRefresh config is set to stop firefox to prompt
+    // the save password dialog
+    forceRefresh = {true}
+  >
     <App />
   </BrowserRouter>, 
   document.getElementById('root'));
