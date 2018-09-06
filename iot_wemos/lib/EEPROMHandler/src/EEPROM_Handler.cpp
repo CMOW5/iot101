@@ -108,9 +108,14 @@ bool EEPROMHandler::writeToEEPROM(int start, String data) {
 
 String EEPROMHandler::readFromEEPROM(int startPointer) {
   EEPROM.begin(512);
+  String eepromData = "";
 
   int dataLength = (int) EEPROM.read(startPointer);
-  String eepromData = "";
+
+  // the eeprom has not been written yet
+  if (dataLength < 0 || dataLength > EEPROMHandler::MAX_DATA_LENGTH) {
+    return eepromData;
+  }
 
   int startAddress = startPointer + 1;
   int endAddress =  startAddress + dataLength;
