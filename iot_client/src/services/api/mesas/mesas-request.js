@@ -58,4 +58,45 @@ export default class MesasRequest {
         });
     });
   }
+
+  /**
+   * Get the mesas
+   *
+   * @param {object} data the mesa data 
+   * @return {Promise}
+   */
+  static create(mesaData) {
+    let url = MesasUrls.create();
+
+    return new Promise((resolve, reject) => {
+      HttpRequester.post(url, mesaData)
+        .then((response) => {
+          const createdMesa = response.data.data;
+          resolve(createdMesa);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * validate a microcontroller conection
+   *
+   * @param {object} data the mesa data 
+   * @return {Promise}
+   */
+  static validateConnection() {
+    let url = MesasUrls.validateConnection();
+
+    return new Promise((resolve, reject) => {
+      HttpRequester.get(url)
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
 }
