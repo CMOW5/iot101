@@ -29,6 +29,15 @@ const Mesa = dbconnection.define('mesa', {
   timestamps: true,
 });
 
+Mesa.states = {
+  disponible: 'disponible',
+  solicitandoServicio: 'solicitando_servicio',
+  pedidoTomado: 'pedido_tomado',
+  noDisponible: 'no_disponible',
+  atendido: 'atendido',
+  alarma: 'alarma'
+}
+
 // relationships
 Mesa.hasMany(MesaHistorial, {as: 'History'});
 
@@ -53,33 +62,6 @@ Mesa.updateMesaState = async function(mesaId, newState) {
     }),
     mesa.save(),
   ]);
-
-  /*
-  return this.findById(mesaId)
-    .then((mesa) => {
-      let end = mesa.updatedAt;
-      let now = moment();
-      let duration = moment.duration(now.diff(end));
-      let hours = duration.asHours();
-      const fromState = mesa.state;
-
-      mesa.state = newState;
-
-      return Promise.all([
-        MesaHistorial.create({
-          mesaId: mesa.id,
-          from: fromState,
-          to: newState,
-          timeDiff: hours,
-        }),
-        mesa.save(),
-      ]);
-    }).then((mesaHistorial) => {
-      return mesaHistorial;
-    }).catch((error) => {
-      return error;
-    });
-    */
 };
 
 /**
