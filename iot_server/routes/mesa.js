@@ -25,6 +25,19 @@ router.get('/', function(req, res, next) {
 });
 
 /* register a new mesa */
+router.delete('/:id', async function(req, res, next) {
+  const mesaId = req.params.id;
+  const mesa =  await Mesa.findById(mesaId);
+
+  if (mesa) {
+    await mesa.destroy();
+    res.json({data: 'mesa borrada'});
+  } else {
+    res.status(404).json({errors: 'la mesa no existe'});
+  }
+});
+
+/* register a new mesa */
 router.get('/validateconnection', async function(req, res, next) {
   serialPortService.verifyConnection().then(function(response) {
     res.json({message: response});
@@ -36,21 +49,15 @@ router.get('/validateconnection', async function(req, res, next) {
 /* register a new mesa */
 router.post('/', async function(req, res, next) {
   try {
-    // TODO: validate if the mesa already exists
-    const mesaNumber = req.body.mesa;
-    const mesa = await Mesa.findById(mesaNumber);
-
-    if (mesa) {
-      res.status(422).json({errors: "la mesa ya existe!!"});
-    } 
-
     // get the wifi network, wifi password, 
     // mqtt server, user and port
     const dbconfig = await DbConfig.get();
 
     if (!dbconfig) {
-      res.json({message: "no config found"});
+      res.status(422).json({message: "no config found"});
     }
+
+    const mesaNumber = req.body.mesa;
 
     const mesaData = {
       mesa: mesaNumber,
@@ -60,11 +67,17 @@ router.post('/', async function(req, res, next) {
     delete mesaData.id;
 
     const serialResponse = await serialPortService.writeRegistrationData(mesaData);
-    const createdMesa = await Mesa.create({id: mesaData.mesa, state: Mesa.states.disponible});
     
+    let mesa = await Mesa.findById(mesaNumber);
+
+    if (!mesa) {
+      mesa = await Mesa.create({id: mesaData.mesa, state: Mesa.states.disponible});
+    }
+
     // TODO: VALIDATE THIS SUBSCRIPTION
-    mqttService.subscribeToMesa(createdMesa.id);
-    res.json({data: createdMesa, serialResponse: serialResponse});
+    mqttService.subscribeToMesa(mesa.id);
+    res.json({data: mesa, serialResponse: serialResponse});  
+
   } catch (error) {
     console.log('registration error = ', error);
     res.json({error: error});
