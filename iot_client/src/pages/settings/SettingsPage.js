@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+// styles 
+import './settings_page.css';
+
 // api helper
 import ConfigApi from '../../services/api/config/config_api';
 
@@ -49,7 +52,7 @@ class SettingsPage extends Component {
   }
 
   async componentDidMount() {
-    const config = await ConfigApi.fetchConfig();
+    const config = await ConfigApi.fetchConfig() || {};
     this.setState({config: config});
   }
 
