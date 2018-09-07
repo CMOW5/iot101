@@ -39,7 +39,12 @@ Mesa.states = {
 }
 
 // relationships
-Mesa.hasMany(MesaHistorial, {as: 'History'});
+Mesa.hasMany(MesaHistorial, {
+  as: 'History', 
+  onDelete: 'cascade', 
+  onUpdate: 'cascade',
+  hooks: true
+});
 
 /**
  * update the mesa state with the given id
