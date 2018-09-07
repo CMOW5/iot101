@@ -17,7 +17,7 @@ import socketHandler from './services/socket/socket-handler';
 // pages 
 import MainTable from './pages/main_table/MainTable';
 import SettingsPage from './pages/settings/SettingsPage';
-import RegisterTablePage from './pages/register_table/RegisterTablePage';
+import CreateMesaPage from './pages/mesas_pages/create_page/CreateMesaPage';
 import NoMatchPage from './pages/no_match_page/NoMatchPage';
 
 // components 
@@ -117,7 +117,7 @@ class App extends Component {
           <Switch>
             <Route exact path={BaseRoutes.base()} component={MainTable}/>
             <Route path={SettingsRoutes.base()} component={SettingsPage}/>
-            <Route path={MesasRoutes.create()} component={RegisterTablePage}/>
+            <Route path={MesasRoutes.create()} component={CreateMesaPage}/>
             <Route component={NoMatchPage}/>
           </Switch>
         </div>
