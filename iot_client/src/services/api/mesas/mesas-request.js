@@ -81,6 +81,27 @@ export default class MesasRequest {
   }
 
   /**
+   * delete the mesa with the given id
+   *
+   * @param {number} mesaId 
+   * @return {Promise}
+   */
+  static delete(mesaId) {
+    let url = MesasUrls.delete(mesaId);
+
+    return new Promise((resolve, reject) => {
+      HttpRequester.delete(url)
+        .then((response) => {
+          const responseData = response.data.data;
+          resolve(responseData);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  /**
    * validate a microcontroller conection
    *
    * @param {object} data the mesa data 
