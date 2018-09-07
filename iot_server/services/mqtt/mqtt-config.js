@@ -64,6 +64,8 @@ module.exports = (app) => {
     Mesa.updateMesaState(mesaId, newState)
       .then((mesaHistorial) => {
         mqttService.changeMesaState(mesaId, newState);
+        // replicate the message to all the browser tabs
+        socketService.sendStateChange(mesaId, newState);
         console.log('mesa successfully updated');
       })
       .catch((error) => {
