@@ -57,7 +57,7 @@ export default class MesasUrls extends BaseUrls {
    * @return {string}
    */
   static update(id) {
-    return this.base() + `/admin/products/${id}`;
+    // return this.base() + `/admin/products/${id}`;
   }
 
   /**
@@ -66,7 +66,7 @@ export default class MesasUrls extends BaseUrls {
    * @return {string}
    */
   static delete(id) {
-    return this.base() + `/admin/products/${id}`;
+    return this.base() + `/${id}`;
   }
 
   /**
