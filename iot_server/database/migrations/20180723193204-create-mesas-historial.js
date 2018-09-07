@@ -14,6 +14,8 @@ module.exports = {
           model: 'mesas',
           key: 'id',
         },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       from: {
         type: Sequelize.ENUM(
