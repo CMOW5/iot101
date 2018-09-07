@@ -19,6 +19,7 @@ export default class SingleMesaRow extends Component {
     super(props);
     this.renderStateColor = this.renderStateColor.bind(this);
     this.changeStateSelected = this.changeStateSelected.bind(this);
+    this.deleteMesa = this.deleteMesa.bind(this);
   }
 
   /**
@@ -58,6 +59,10 @@ export default class SingleMesaRow extends Component {
     }
   }
 
+  deleteMesa() {
+    this.props.onDeleteMesa(this.props.mesa);
+  }
+
   /**
    * @return {ReactNode}
    */
@@ -76,6 +81,23 @@ export default class SingleMesaRow extends Component {
         </td>
         <td>
           <StateActions onChangeStateSelected={this.changeStateSelected} />
+        </td>
+        <td>
+          <div className="field is-grouped">
+            <p className="control">
+              <a className="button is-warning">
+                Editar
+              </a>
+            </p>
+            <p className="control">
+              <a 
+                className="button is-danger"
+                onClick={this.deleteMesa}
+                >
+                Borrar
+              </a>
+            </p>
+          </div>
         </td>
       </tr>
     );
