@@ -93,7 +93,17 @@ export default class MainTable extends Component {
     this.updateMesas(mesa.id, action);
   }
 
-  
+  /**
+   * this method is called when the delete mesa button is clicked
+   * in the given mesa row
+   * @param {Mesa} mesa
+   */
+  deleteMesa(mesa) {
+    console.log('delete mesa = ', mesa.id);
+    mesasRequest.delete(mesa.id).then((response => {
+      console.log(response);
+    }));
+  }
 
   /**
    * @return {ReactNode}
@@ -105,6 +115,7 @@ export default class MainTable extends Component {
         mesa={mesaModel}
         key={mesa.id}
         onChangeStateSelected={this.changeStateSelected}
+        onDeleteMesa={this.deleteMesa}
       />);
     });
 
@@ -116,6 +127,7 @@ export default class MainTable extends Component {
               <th>Mesa</th>
               <th>Estado</th>
               <th>Acciones</th>
+              <th>Admin</th>
             </tr>
           </thead>
           <tbody>
