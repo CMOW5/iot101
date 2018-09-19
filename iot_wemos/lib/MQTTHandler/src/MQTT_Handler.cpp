@@ -7,10 +7,17 @@ MQTTEvents MQTTHandler::mqttEvents;
 MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
   systemConfig = SystemConfig::instance();
 
+  /*
   char* mqttServer = "192.168.0.13"; //Utils::strTocc(systemConfig->mqttServerIp());
   int mqttPort = 1883; // atoi(systemConfig->mqttPort().c_str());
   char* mqttUsername = "";// Utils::strTocc(systemConfig->mqttUsername());
   char* mqttKey = ""; // Utils::strTocc(systemConfig->mqttKey());
+  */
+
+  char* mqttServer = Utils::strTocc(systemConfig->mqttServerIp());
+  int mqttPort = atoi(systemConfig->mqttPort().c_str());
+  char* mqttUsername = Utils::strTocc(systemConfig->mqttUsername());
+  char* mqttKey = Utils::strTocc(systemConfig->mqttKey());
 
   mqtt = new Adafruit_MQTT_Client(
     &(wifihandler.client),
