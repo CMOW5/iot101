@@ -36,7 +36,7 @@ void serialEvent(void);
 void setup() {
   // reserve 512 bytes for the configurationData: (max eeprom size)
   Serial.begin(9600);
-  // SerialHandler::disableLogs();
+  SerialHandler::disableLogs();
   delay(1000);
   configurationData.reserve(512);
 
