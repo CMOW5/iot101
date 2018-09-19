@@ -64,9 +64,6 @@ void App::update(Subject* theChangedSubject) {
 // Initialize the aplication modules
 void App::initialize()
 {
-  // SYS_Initialize(); //initialize the system
-	// Serial.begin(9600);
-	// delay(1000);
 	wifiHandler->connect();
 	mqttHandler->initialize();
 	mqttHandler->connect();
