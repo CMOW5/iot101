@@ -31,13 +31,13 @@ class App: public Observer
     IOEvents* _ioSubject;
 
     //states
+    State *state; // the current state
     State *bootState;
     State *disponibleState;
     State *solicitandoServicioState;
     State *pedidoTomadoState;
     State *atendidoState;
     State *alarmaState;
-    State *state; // the current state
 
     void processEvents(void);
 
@@ -48,23 +48,50 @@ class App: public Observer
     WifiHandler *wifiHandler;
     MQTTHandler *mqttHandler;
 
-    // methods
-    virtual void update(Subject*); // overrides Observer operation
+    /**
+      init the app states and handlers
+    */
     void initialize(void);
+
+    /**
+      this method process the app tasks
+    */
     void tasks(void);
 
-    //actions ex => insertQuarter(), ejectQuarter() something that
+    /**
+      this method is called when an mqtt or io event is triggered
+      @param Subject* the subject that triggered the event
+    */
+    virtual void update(Subject*); // overrides Observer operation
+
+    // actions ex => insertQuarter(), ejectQuarter() something that
     // triggers a state change in the app
+
+    /**
+      this method triggers a solicitar servicio state change
+    */
     void solicitarServicio(void);
+
+    /**
+      this method triggers a alarma state change
+    */
     void prenderAlarma(void);
+
+    /**
+      this method triggers a cargar datos state change
+    */
     void cargarDatos(void);
-    //
+
     /**
       set the next state in a app state machine
       @param newState the next state
     */
     void setState(State *newState);
 
+    /**
+      set the next state in a app state machine (by name)
+      @param newStateName the next state name
+    */
     void setState(char* newStateName);
 
     /**

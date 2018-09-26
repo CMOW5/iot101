@@ -10,16 +10,16 @@ App::App(
 	// set the app pins
 	this->pins = pins;
 
-	// subscribe to the subjects
+	// subscribe to the subjects, see @link https://en.wikipedia.org/wiki/Observer_pattern
 	_mqttSubject = mqttSubject;
 	_mqttSubject->attach(this);
 	_ioSubject = ioSubject;
 	_ioSubject->attach(this);
 
-  // mqttHandler = new MQTTHandler(wifiHandler);
 	mqttHandler = mqHandler;
 	wifiHandler = wHandler;
 
+	// the state machine states, see @link https://en.wikipedia.org/wiki/State_pattern
 	bootState = new BootState(this);
 	disponibleState = new DisponibleState(this);
   solicitandoServicioState = new SolicitandoServicioState(this);
@@ -29,36 +29,9 @@ App::App(
 }
 
 App::~App() {
+	// unsubscribe the observers
 	_mqttSubject->detach(this);
 	_ioSubject->detach(this);
-}
-
-void App::update(Subject* theChangedSubject) {
-
-	if (theChangedSubject == _mqttSubject) { // mqtt event
-		// print something
-		SerialHandler::println("event desde socket subject!!!");
-		SerialHandler::println("data = ");
-		SerialHandler::println(_mqttSubject->getData());
-		SerialHandler::println("channel = ");
-		SerialHandler::println(_mqttSubject->channel);
-
-		char* newState = _mqttSubject->getData();
-		setState(newState);
-
-	}
-
-	if (theChangedSubject == _ioSubject) {  // io pin event
-		SerialHandler::println("event desde io pins");
-		int t_pin = _ioSubject->getPin();
-		SerialHandler::println("pin = ");
-		SerialHandler::println(t_pin);
-		if (t_pin == 14) {
-			solicitarServicio();
-		} else if (t_pin == 12) {
-			prenderAlarma();
-		}
-	}
 }
 
 // Initialize the aplication modules
@@ -72,6 +45,33 @@ void App::initialize()
   SerialHandler::println("App initialized");
 }
 
+void App::update(Subject* theChangedSubject) {
+
+	if (theChangedSubject == _mqttSubject) { // mqtt event
+		SerialHandler::println("event desde mqtt subject");
+		SerialHandler::println("data = ");
+		SerialHandler::println(_mqttSubject->getData());
+		SerialHandler::println("channel = ");
+		SerialHandler::println(_mqttSubject->channel);
+
+		char* newStateName = _mqttSubject->getData();
+		setState(newStateName);
+	}
+
+	if (theChangedSubject == _ioSubject) {  // io pin event
+		SerialHandler::println("event desde io pins");
+		int pinTriggered = _ioSubject->getPin();
+		SerialHandler::println("pin = ");
+		SerialHandler::println(pinTriggered);
+
+		if (pinTriggered == 14) {
+			solicitarServicio();
+		} else if (pinTriggered == 12) {
+			prenderAlarma();
+		}
+	}
+}
+
 // the program main state machine
 void App::tasks()
 {
@@ -79,10 +79,10 @@ void App::tasks()
 	mqttHandler->processSubscriptions(); // keep watching for mqqt subcriptions events
 }
 
-// actions
+// app actions
 void App::cargarDatos(void) {
 	SerialHandler::println("obteniendo datos iniciales desde el servidor");
-	mqttHandler->cargarDatos();
+	mqttHandler->cargarDatos(); // TODO: do this from state->cargarDatos, see solicitarServicio()
 }
 
 void App::solicitarServicio(void) {
@@ -95,9 +95,11 @@ void App::prenderAlarma(void) {
 
 void App::setState(State *newState) {
   state = newState;
+
 	if (state == bootState) {
 		cargarDatos();
-		pins->D1.turnOn();
+		// TODO: encapsulate the pins state color
+		pins->D1.turnOn(); // TODO: turnOn really means turnOff!!!, fix this
 		pins->D2.turnOn();
 		pins->D3.turnOn();
 	}
@@ -125,7 +127,6 @@ void App::setState(State *newState) {
 }
 
 void App::setState(char* newStateName) {
-  // state = newState;
 	SerialHandler::println("new state name = ");
 	SerialHandler::println(newStateName);
 	if (strcmp(newStateName, "disponible") == 0) {
