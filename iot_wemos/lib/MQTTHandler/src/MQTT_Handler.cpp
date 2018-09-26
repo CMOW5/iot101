@@ -26,14 +26,7 @@ MQTTHandler::MQTTHandler(WifiHandler wifihandler) {
     mqttUsername,
     mqttUsername,
     mqttKey);
-
-    /*
-    "restaurante/mesa_5/datos"
-    "restaurante/mesa_5/estado"
-    "restaurante/mesa_5/server/estado"
-    */
-
-
+    
   // feeds topics
   cargarDatosFeed
     = new Adafruit_MQTT_Publish(mqtt, Utils::strTocc(feedCargarDatosTopic())

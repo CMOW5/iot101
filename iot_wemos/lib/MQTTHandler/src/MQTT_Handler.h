@@ -15,12 +15,6 @@ class MQTTEvents;
 
 class MQTTHandler
 {
-  /*
-  Adafruit_MQTT_Client mqtt(&client, MQTT_SERVER, MQTT_SERVERPORT, MQTT_USERNAME, MQTT_USERNAME, MQTT_KEY);
-  Adafruit_MQTT_Publish temperatureFeed = Adafruit_MQTT_Publish(&mqtt, MQTT_FEED_TEMP);
-  Adafruit_MQTT_Publish humidityFeed = Adafruit_MQTT_Publish(&mqtt, MQTT_FEED_HUMI);
-  */
-
   public:
     MQTTHandler(WifiHandler wifihandler);
 
