@@ -26,6 +26,10 @@ class NavBar extends Component {
     RouterHandler.goTo(this.props.history, route);
   }
 
+  sendAllDisponibleCommand = () => {
+    this.props.onSendAllDisponibleCommand();
+  }
+
   render() {
     return (
       <nav className="navbar is-transparent">
@@ -64,9 +68,24 @@ class NavBar extends Component {
                 </a>
               </div>
             </div>
-          </div>
 
-        </div>
+            <div className="navbar-item has-dropdown is-hoverable">
+              <a className="navbar-link">
+                Commandos
+              </a>
+              <div className="navbar-dropdown is-boxed">
+                <a 
+                  className="navbar-item"
+                  onClick = {this.sendAllDisponibleCommand}
+                  >
+                  todos disponibles
+                </a>
+              </div>
+            </div>
+          </div>
+         </div>
+
+         
       </nav>
     );
   }
