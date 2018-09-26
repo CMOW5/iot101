@@ -24,20 +24,7 @@ router.get('/', function(req, res, next) {
   */
 });
 
-/* register a new mesa */
-router.delete('/:id', async function(req, res, next) {
-  const mesaId = req.params.id;
-  const mesa =  await Mesa.findById(mesaId);
-
-  if (mesa) {
-    await mesa.destroy();
-    res.json({data: 'mesa borrada'});
-  } else {
-    res.status(404).json({errors: 'la mesa no existe'});
-  }
-});
-
-/* register a new mesa */
+/* validate if a wemos module is connnected in a serial port */
 router.get('/validateconnection', async function(req, res, next) {
   serialPortService.verifyConnection().then(function(response) {
     res.json({message: response});
@@ -81,6 +68,19 @@ router.post('/', async function(req, res, next) {
   } catch (error) {
     console.log('registration error = ', error);
     res.json({error: error});
+  }
+});
+
+/* register a new mesa */
+router.delete('/:id', async function(req, res, next) {
+  const mesaId = req.params.id;
+  const mesa =  await Mesa.findById(mesaId);
+
+  if (mesa) {
+    await mesa.destroy();
+    res.json({data: 'mesa borrada'});
+  } else {
+    res.status(404).json({errors: 'la mesa no existe'});
   }
 });
 
