@@ -9,18 +9,32 @@
 #include <Ticker.h>
 #include "SerialHandler.h"
 
+// this object handles the wifi connection
 WifiHandler wifiHandler;
+
+// this object handles the mqtt connection
 MQTTHandler mqttHandler(wifiHandler);
+
+// this object handles the io events
 IOHandler ioHandler;
+
+// the application pins
 Pins pins;
 
+// system config is a singleton that holds
+// the system and connection configuration
+// e.g wifi network, wifi password, the mesa number, etc
 SystemConfig* systemConfig;
+
+// this poll checks if there is any serial data
+// the configuration data is received via serial
 Ticker serialPoll;
 
 // configuration loader
-String configurationData = "";         // a String to hold incoming data
+String configurationData = ""; // a String to hold incoming data
 bool configurationReceived = false;  // whether the string is complete
 
+// the main state machine
 App app(
   &pins,
   &mqttHandler,
@@ -29,22 +43,37 @@ App app(
   ioHandler.getEvents()
 );
 
-
+/**
+  initialize the pins
+*/
 void initPins(void);
+
+/**
+  this method is called every 20 ms to check
+  if there is any serial data
+*/
 void serialEvent(void);
 
 void setup() {
-  // reserve 512 bytes for the configurationData: (max eeprom size)
   Serial.begin(9600);
+
+  // we disable the logs so they do not interfere
+  // with the server communication when the configuration
+  // is being loaded
   SerialHandler::disableLogs();
+
   delay(1000);
+
+  // reserve 512 bytes for the configurationData: (max eeprom size)
   configurationData.reserve(512);
 
   systemConfig = SystemConfig::instance();
+
   SerialHandler::println("System config = ");
   SerialHandler::println(systemConfig->toString());
 
-  // check the serial buffer every 1 ms
+  // check the serial buffer every 1 ms, to see if there is
+  // any config data to be loaded
   serialPoll.attach_ms(20, serialEvent);
 
   initPins();
@@ -56,11 +85,11 @@ void loop() {
 }
 
 void initPins() {
-  pins.D5.mode(INPUT_PULLUP);
-  pins.D6.mode(INPUT_PULLUP);
-  pins.D1.mode(OUTPUT); // red
-  pins.D2.mode(OUTPUT); // green
-  pins.D3.mode(OUTPUT); // blue
+  pins.D5.mode(INPUT_PULLUP); // solicitar servicio button
+  pins.D6.mode(INPUT_PULLUP); // alarma button
+  pins.D1.mode(OUTPUT); // red led
+  pins.D2.mode(OUTPUT); // green led
+  pins.D3.mode(OUTPUT); // blue led
 }
 
 /*
