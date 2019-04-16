@@ -95,20 +95,13 @@ export default class HttpRequester {
           console.log(this.className() + methodName +
             'response = ', response);
 
-          this.onSuccess(response.data);
+          // this.onSuccess(response.data);
           resolve(response);
         })
         .catch((error) => {
           const methodName = ' catch(..) ';
           console.log(this.className() + methodName + 'error = ', error);
-          this.onFail(error.response.data);
-
-          const status = error.response.status;
-
-          if (status === 401) {
-            // EventProvider.fire("unauthorized");
-          }
-
+          
           reject(error);
         });
     });
